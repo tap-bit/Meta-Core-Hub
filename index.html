@@ -7,138 +7,142 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --cyan: #00e5ff; 
-            --cyan-glow: rgba(0, 229, 255, 0.4);
-            --bg-dark: #0f1115; 
-            --card-bg: rgba(255, 255, 255, 0.03); 
-            --card-border: rgba(255, 255, 255, 0.08);
-            --text-main: #e2e8f0;
-            --text-muted: #94a3b8;
+            --cyan: #00d4ff; --cyan-glow: rgba(0, 212, 255, 0.4);
+            --bg-dark: #0f1115; --card-bg: rgba(255, 255, 255, 0.03); 
+            --card-border: rgba(255, 255, 255, 0.08); --text-main: #e2e8f0; --text-muted: #94a3b8;
         }
-
         body { font-family: 'Inter', sans-serif; background: radial-gradient(circle at top, #1a1d24 0%, var(--bg-dark) 100%); color: var(--text-main); min-height: 100vh; margin: 0; padding: 40px 20px; }
-        .container { max-width: 1100px; margin: auto; }
+        .container { max-width: 1200px; margin: auto; }
         h1 { text-align: center; color: #ffffff; font-weight: 800; font-size: 2.5rem; letter-spacing: 4px; margin-bottom: 40px; text-shadow: 0 0 20px var(--cyan-glow); }
         h1 span { color: var(--cyan); }
 
-        /* Tabs */
+        /* Navigation */
         .tabs { display: flex; gap: 8px; justify-content: center; margin-bottom: 40px; background: rgba(0, 0, 0, 0.2); padding: 8px; border-radius: 50px; width: fit-content; margin-inline: auto; border: 1px solid var(--card-border); }
-        .tab { padding: 10px 20px; cursor: pointer; border-radius: 40px; font-weight: 600; font-size: 0.9rem; transition: 0.3s; color: var(--text-muted); }
-        .tab:hover { color: #ffffff; background: rgba(255, 255, 255, 0.05); }
-        .tab.active { background: var(--cyan); color: #000000; box-shadow: 0 0 15px var(--cyan-glow); }
+        .tab { padding: 10px 24px; cursor: pointer; border-radius: 40px; font-weight: 600; font-size: 0.95rem; transition: 0.3s; color: var(--text-muted); }
+        .tab:hover { color: #fff; background: rgba(255, 255, 255, 0.05); }
+        .tab.active { background: var(--cyan); color: #000; box-shadow: 0 0 15px var(--cyan-glow); }
 
-        /* Pages */
         .page { display: none; }
-        .page.active { display: block; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .page.active { display: block; }
 
-        /* Shared Utility Styles for Generators */
-        .gen-section { background: var(--card-bg); border: 1px solid var(--card-border); padding: 24px; border-radius: 16px; margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
-        input[type="text"], input[type="number"], select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--card-border); background: #000; color: var(--cyan); font-family: 'JetBrains Mono', monospace; box-sizing: border-box; margin-bottom: 15px; }
-        button.action-btn { width: 100%; padding: 15px; background: var(--cyan); border: none; border-radius: 8px; font-weight: bold; color: #000; cursor: pointer; transition: 0.3s; }
-        button.action-btn:hover { box-shadow: 0 0 15px var(--cyan-glow); }
-
-        /* Explorer Grid */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
-        .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 24px; transition: 0.3s; }
-        .card:hover { border-color: var(--cyan); box-shadow: 0 0 15px rgba(0,229,255,0.1); }
-        .name { font-size: 1.2rem; font-weight: 800; color: #fff; margin-bottom: 10px; }
-        .section-tag { font-size: 0.7rem; color: var(--cyan); text-transform: uppercase; margin: 10px 0 5px; font-weight: 800; }
+        /* UI Elements */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
+        .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 24px; }
+        label { display: block; font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
+        input, select { width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid var(--card-border); color: #fff; border-radius: 8px; box-sizing: border-box; margin-bottom: 15px; font-family: 'JetBrains Mono'; }
         
-        /* Socials */
-        .social-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-        .social-card { text-align: center; padding: 30px; border: 1px solid var(--card-border); border-radius: 16px; background: var(--card-bg); text-decoration: none; color: white; transition: 0.3s; }
-        .social-card:hover { background: var(--cyan); color: #000; }
+        .btn-gen { width: 100%; padding: 15px; background: var(--cyan); color: #000; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; text-transform: uppercase; margin-top: 10px; }
+        .btn-gen:hover { box-shadow: 0 0 15px var(--cyan-glow); }
+        
+        /* Power Registry Specifics */
+        .ability-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; max-height: 400px; overflow-y: auto; padding-right: 5px; }
+        .ability-card { background: #1a1a1a; border: 1px solid var(--card-border); border-radius: 6px; padding: 12px; }
+        .ability-card.active { border-color: var(--cyan); }
+        .tag { font-family: 'JetBrains Mono'; background: rgba(0, 229, 255, 0.08); color: var(--cyan); border: 1px solid rgba(0, 229, 255, 0.2); padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; display: inline-block; margin: 4px; }
+        #output { background: #050505; color: #0f0; padding: 15px; border-radius: 8px; border: 1px solid #333; font-family: 'Consolas'; white-space: pre-wrap; font-size: 0.85rem; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1>META CORE <span>HUB</span></h1>
-
     <div class="tabs">
-        <div class="tab active" onclick="switchTab('explorer', this)">Guide</div>
-        <div class="tab" onclick="switchTab('suitgen', this)">Suit Gen</div>
-        <div class="tab" onclick="switchTab('powergen', this)">Power Gen</div>
-        <div class="tab" onclick="switchTab('socials', this)">Community</div>
+        <div class="tab active" onclick="switchTab('explorer', this)">Explorer</div>
+        <div class="tab" onclick="switchTab('suitgen', this)">Suit Fabricator</div>
+        <div class="tab" onclick="switchTab('powergen', this)">Power Registry</div>
     </div>
 
-    <div id="explorer" class="page active">
-        <div id="content" class="grid"></div>
-    </div>
+    <div id="explorer" class="page active"><div id="explorer-content" class="grid"></div></div>
 
     <div id="suitgen" class="page">
-        <div class="gen-section">
-            <label>Suit Identifier</label>
-            <input type="text" id="suitId" value="template_suit">
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                <label><input type="checkbox" id="isNano"> Nano-Tech</label>
-                <label><input type="checkbox" id="hasCape"> Cape Animation</label>
+        <div class="grid">
+            <div class="card">
+                <label>Suit Identifier</label>
+                <input type="text" id="suitId" value="template_suit">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <label><input type="checkbox" id="isNano"> Nano-Tech</label>
+                    <label><input type="checkbox" id="hasCape"> Cape</label>
+                    <label><input type="checkbox" id="allowMask" checked> Mask</label>
+                    <label><input type="checkbox" id="allowHood" checked> Hood</label>
+                    <label><input type="checkbox" id="allowSuitOff" checked> Suit Off</label>
+                </div>
+                <button class="btn-gen" onclick="downloadSuit()">GENERATE JSON</button>
             </div>
-            <button class="action-btn" onclick="downloadSuit()">GENERATE JSON</button>
         </div>
     </div>
 
     <div id="powergen" class="page">
-        <div class="gen-section">
-            <label>Registry Key</label>
-            <input type="text" id="registryKey" value="hero_key">
-            <button class="action-btn" onclick="generateRegistry()">GENERATE REGISTRY</button>
-            <div id="output" style="margin-top:20px; background:#000; padding:15px; border-radius:8px; color:var(--cyan); font-family:monospace; white-space:pre-wrap; font-size: 0.8rem;">// Output...</div>
+        <div class="grid">
+            <div class="card">
+                <label>Registry Key</label><input type="text" id="regSuitId" value="hero_key">
+                <label>Suit Item</label><input type="text" id="suitItem" value="suit:hero_suit">
+                <div id="effectContainer"></div>
+                <button class="btn-gen" style="background:transparent; border:1px dashed var(--cyan); color:var(--cyan);" onclick="addEffectRow()">+ Add Effect</button>
+            </div>
+            <div class="card">
+                <label>Abilities</label>
+                <div class="ability-grid" id="abilitiesContainer"></div>
+            </div>
         </div>
-    </div>
-
-    <div id="socials" class="page">
-        <div class="social-grid">
-            <a href="#" class="social-card">DISCORD</a>
-            <a href="#" class="social-card">YOUTUBE</a>
-            <a href="#" class="social-card">TIKTOK</a>
-            <a href="#" class="social-card">MCPEDL</a>
-        </div>
+        <button class="btn-gen" onclick="generateRegistry()">GENERATE REGISTRY</button>
+        <div id="output" style="margin-top:20px;">// Registry JSON...</div>
     </div>
 </div>
 
 <script>
-    // --- NAVIGATION ---
-    function switchTab(tabId, el) {
+    // --- NAV ---
+    function switchTab(id, el) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
+        document.getElementById(id).classList.add('active');
         el.classList.add('active');
     }
 
     // --- EXPLORER DATA ---
     const DATA = {
-        abilities: [
-            { name: "Super Strength", desc: "Increases melee damage.", tags: ["passive"] },
-            { name: "Web Swing", desc: "Swing using physics.", tags: ["movement"] }
-        ]
+        abilities: [{name: "Super Strength", desc: "Increases melee damage.", tags: ["passive", "combat"]}, {name: "Super Speed", desc: "Extreme speed.", tags: ["movement"]}],
+        ores: [{name: "Titanium", desc: "Crafting material.", tags: ["rare"]}],
+        structures: [{name: "Meteor", desc: "Radioactive.", tags: ["biome:plains"]}]
     };
-
     function renderExplorer() {
-        const container = document.getElementById("content");
-        DATA.abilities.forEach(item => {
-            const card = document.createElement("div");
-            card.className = "card";
-            card.innerHTML = `<div class="name">${item.name}</div><div class="desc">${item.desc}</div>`;
-            container.appendChild(card);
+        const c = document.getElementById("explorer-content");
+        Object.values(DATA).flat().forEach(i => {
+            c.innerHTML += `<div class="card"><div style="font-weight:800; font-size:1.2rem;">${i.name}</div><p>${i.desc}</p>${i.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>`;
         });
     }
 
-    // --- GENERATOR LOGICS (Simplified for Integration) ---
+    // --- SUIT LOGIC ---
     function downloadSuit() {
-        alert("Generating JSON for: " + document.getElementById('suitId').value);
-        // ... include your previous full generateAttachable logic here
+        const id = document.getElementById('suitId').value;
+        const config = { id, isNano: document.getElementById('isNano').checked, hasCape: document.getElementById('hasCape').checked };
+        const content = JSON.stringify({ "format_version": "1.21.0", "minecraft:attachable": { "description": { "identifier": `suit:${config.id}` } } }, null, 2);
+        const blob = new Blob([content], { type: "application/json" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `${id}.json`;
+        link.click();
     }
 
+    // --- REGISTRY LOGIC ---
+    const abilityDb = [{ name: "Flight", id: "ability:flight" }, { name: "Energy Beam", id: "ability:energy_beam" }];
+    function initAbilities() {
+        const c = document.getElementById('abilitiesContainer');
+        abilityDb.forEach((ab, i) => {
+            c.innerHTML += `<div class="ability-card" id="card_${i}"><label><input type="checkbox" onchange="this.parentElement.parentElement.classList.toggle('active', this.checked)"> ${ab.name}</label></div>`;
+        });
+    }
+    function addEffectRow() {
+        const div = document.createElement('div');
+        div.style.display = "flex"; div.innerHTML = `<input type="text" placeholder="minecraft:effect"> <button onclick="this.parentElement.remove()" style="background:#522; color:#f66; border:none; padding:5px; margin-left:5px;">X</button>`;
+        document.getElementById('effectContainer').appendChild(div);
+    }
     function generateRegistry() {
-        document.getElementById('output').textContent = "{ \"registry\": \"generated\" }";
-        // ... include your previous full generateRegistry logic here
+        const res = { key: document.getElementById('regSuitId').value, suit: document.getElementById('suitItem').value };
+        document.getElementById('output').textContent = JSON.stringify(res, null, 4);
     }
 
     renderExplorer();
+    initAbilities();
 </script>
-
 </body>
 </html>
