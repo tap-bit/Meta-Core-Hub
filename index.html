@@ -1,182 +1,592 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meta Core Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        :root { 
-            --cyan: #00e5ff; --cyan-glow: rgba(0, 229, 255, 0.4);
-            --bg-dark: #0f1115; --card-bg: rgba(255, 255, 255, 0.03); 
-            --card-border: rgba(255, 255, 255, 0.08); --text-main: #e2e8f0; --text-muted: #94a3b8;
-        }
-        body { font-family: 'Inter', sans-serif; background: radial-gradient(circle at top, #1a1d24 0%, var(--bg-dark) 100%); color: var(--text-main); min-height: 100vh; margin: 0; padding: 40px 20px; }
-        .container { max-width: 1200px; margin: auto; }
-        h1 { text-align: center; color: #ffffff; font-weight: 800; font-size: 2.5rem; letter-spacing: 4px; margin-bottom: 40px; text-shadow: 0 0 20px var(--cyan-glow); }
-        h1 span { color: var(--cyan); }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meta Core Hub & Architect</title>
 
-        /* Navigation */
-        .tabs { display: flex; gap: 8px; justify-content: center; margin-bottom: 40px; background: rgba(0, 0, 0, 0.2); padding: 8px; border-radius: 50px; width: fit-content; margin-inline: auto; border: 1px solid var(--card-border); }
-        .tab { padding: 10px 24px; cursor: pointer; border-radius: 40px; font-weight: 600; font-size: 0.95rem; transition: 0.3s; color: var(--text-muted); }
-        .tab:hover { color: #fff; background: rgba(255, 255, 255, 0.05); }
-        .tab.active { background: var(--cyan); color: #000; box-shadow: 0 0 15px var(--cyan-glow); }
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-        .page { display: none; }
-        .page.active { display: block; }
+<style>
+:root { 
+    --cyan: #00e5ff; 
+    --cyan-glow: rgba(0, 229, 255, 0.4);
+    --bg-dark: #0a0c10; 
+    --card-bg: rgba(255, 255, 255, 0.02); 
+    --card-border: rgba(255, 255, 255, 0.08);
+    --text-main: #e2e8f0;
+    --text-muted: #94a3b8;
+    --danger: #ff4d4d;
+}
 
-        /* Cards & Form Elements */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
-        .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 24px; }
-        h2 { font-size: 0.9rem; color: var(--cyan); text-transform: uppercase; margin: 0 0 15px 0; border-bottom: 1px solid #333; padding-bottom: 8px; }
-        label { display: block; font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
-        input, select { width: 100%; padding: 12px; background: #000; border: 1px solid var(--card-border); color: #fff; border-radius: 8px; box-sizing: border-box; margin-bottom: 15px; font-family: 'JetBrains Mono'; }
-        
-        /* Registry & Ability Specifics */
-        .ability-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; max-height: 400px; overflow-y: auto; }
-        .ability-card { background: #1a1a1a; border: 1px solid var(--card-border); border-radius: 6px; padding: 12px; transition: 0.2s; }
-        .ability-card.active { border-color: var(--cyan); }
-        .ability-header { display: flex; align-items: center; gap: 10px; font-weight: bold; cursor: pointer; }
-        .aura-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-        .dynamic-row { display: flex; gap: 8px; margin-bottom: 10px; }
-        .btn-gen { width: 100%; padding: 15px; background: var(--cyan); color: #000; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; text-transform: uppercase; margin-top: 10px; }
-        .btn-add { background: transparent; color: var(--cyan); border: 1px dashed var(--cyan); padding: 8px; width: 100%; cursor: pointer; }
-        #output { background: #000; color: #0f0; padding: 15px; border-radius: 8px; font-family: 'Consolas', monospace; font-size: 0.85rem; overflow-x: auto; white-space: pre; }
-    </style>
+/* --- BASE STYLES --- */
+body {
+    font-family: 'Inter', sans-serif;
+    background: radial-gradient(circle at top, #161922 0%, var(--bg-dark) 100%);
+    color: var(--text-main);
+    min-height: 100vh;
+    margin: 0;
+    padding: 40px 20px;
+}
+
+.container { 
+    max-width: 1200px; 
+    margin: auto; 
+}
+
+h1 {
+    text-align: center;
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 2.5rem;
+    letter-spacing: 4px;
+    margin-bottom: 40px;
+    text-shadow: 0 0 20px var(--cyan-glow);
+    text-transform: uppercase;
+}
+
+h1 span { color: var(--cyan); }
+
+/* --- TABS --- */
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 40px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px;
+    border-radius: 50px;
+    width: fit-content;
+    margin-inline: auto;
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(10px);
+}
+
+.tab {
+    padding: 10px 24px;
+    cursor: pointer;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: var(--text-muted);
+}
+
+.tab:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.tab.active {
+    background: var(--cyan);
+    color: #000000;
+    box-shadow: 0 0 15px var(--cyan-glow);
+}
+
+/* --- VIEW CONTROLLERS --- */
+.view { display: none; animation: fadeIn 0.4s ease forwards; }
+.view.active { display: block; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- CARDS & GRIDS --- */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+.card, .section {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 24px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: ''; position: absolute; top: 0; left: 0; 
+    width: 100%; height: 3px; background: var(--cyan);
+    transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease;
+}
+
+.card:hover { 
+    transform: translateY(-5px);
+    border-color: rgba(0, 229, 255, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px var(--cyan-glow);
+}
+
+.card:hover::before { transform: scaleX(1); }
+
+.section-title { font-size: 0.9rem; text-transform: uppercase; color: var(--cyan); margin-bottom: 15px; font-weight: 800; border-bottom: 1px solid var(--card-border); padding-bottom: 8px;}
+
+/* --- INPUTS & FORMS --- */
+.input-group { margin-bottom: 20px; }
+label { display: block; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; }
+
+input[type="text"], input[type="number"], select {
+    width: 100%;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--card-border);
+    padding: 12px;
+    border-radius: 8px;
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+    outline: none;
+    transition: 0.3s;
+}
+
+input:focus, select:focus {
+    border-color: var(--cyan);
+    box-shadow: 0 0 10px var(--cyan-glow);
+}
+
+/* --- BUTTONS --- */
+.btn-primary {
+    width: 100%; padding: 16px; background: var(--cyan); color: #000; border: none;
+    border-radius: 12px; font-weight: 800; font-size: 1rem; text-transform: uppercase;
+    letter-spacing: 2px; cursor: pointer; margin-top: 20px; transition: 0.3s;
+}
+.btn-primary:hover { transform: scale(1.02); box-shadow: 0 0 25px var(--cyan-glow); }
+
+.btn-add { background: transparent; color: var(--cyan); border: 1px dashed var(--cyan); padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.75rem; text-transform: uppercase; transition: 0.2s; }
+.btn-add:hover { background: rgba(0, 229, 255, 0.1); }
+
+.btn-del { background: rgba(255, 77, 77, 0.1); color: var(--danger); border: 1px solid var(--danger); padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: 0.2s;}
+.btn-del:hover { background: var(--danger); color: #fff; }
+
+/* --- CHECKBOX OPTIONS --- */
+.options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+.opt {
+    background: rgba(255,255,255,0.02); border: 1px solid var(--card-border);
+    padding: 12px; border-radius: 8px; display: flex; align-items: center;
+    cursor: pointer; transition: 0.2s; font-size: 0.9rem;
+}
+.opt:hover { background: rgba(255,255,255,0.05); border-color: var(--cyan); }
+.opt input[type="checkbox"] { margin-right: 12px; accent-color: var(--cyan); width: 16px; height: 16px; cursor: pointer;}
+
+/* --- REGISTRY SPECIFIC --- */
+.ability-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; max-height: 400px; overflow-y: auto; padding-right: 10px; }
+.ability-grid::-webkit-scrollbar { width: 6px; }
+.ability-grid::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 3px; }
+.ability-grid::-webkit-scrollbar-track { background: transparent; }
+
+.ability-card { background: rgba(0,0,0,0.2); border: 1px solid var(--card-border); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 10px; transition: 0.2s; }
+.ability-card:hover { border-color: rgba(255,255,255,0.2); }
+.ability-card.active { border-color: var(--cyan); box-shadow: inset 0 0 15px rgba(0, 229, 255, 0.05); }
+
+.ability-header { display: flex; align-items: center; gap: 10px; font-weight: 600; cursor: pointer; color: #fff; }
+.ability-controls { display: flex; gap: 10px; margin-left: 26px; }
+
+.aura-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; }
+.aura-card { background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; border: 1px solid var(--card-border); display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.aura-indicator { width: 16px; height: 16px; border-radius: 50%; display: inline-block; box-shadow: 0 0 10px currentColor; }
+
+.dynamic-row { display: flex; gap: 12px; margin-bottom: 12px; align-items: center; }
+
+#output-container { position: relative; margin-top: 20px; }
+#output { width: 100%; height: 300px; background: #050608; color: var(--cyan); font-family: 'JetBrains Mono', monospace; padding: 20px; border-radius: 12px; border: 1px solid var(--card-border); overflow-y: auto; white-space: pre; font-size: 0.85rem; }
+.copy-btn { position: absolute; top: 15px; right: 20px; background: rgba(255,255,255,0.1); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; backdrop-filter: blur(5px); }
+.copy-btn:hover { background: var(--cyan); color: #000; }
+
+/* --- EXPLORER TYPOGRAPHY --- */
+.name { font-size: 1.4rem; font-weight: 800; color: #ffffff; margin-bottom: 8px; }
+.desc { color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px; }
+.tags-container { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag { font-family: 'JetBrains Mono', monospace; background: rgba(0, 229, 255, 0.08); color: var(--cyan); border: 1px solid rgba(0, 229, 255, 0.2); padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; }
+.tag strong { color: #ffffff; font-weight: normal; }
+</style>
 </head>
+
 <body>
 
 <div class="container">
     <h1>META CORE <span>HUB</span></h1>
+
     <div class="tabs">
-        <div class="tab active" onclick="switchTab('explorer', this)">Explorer</div>
-        <div class="tab" onclick="switchTab('suitgen', this)">Suit Fabricator</div>
-        <div class="tab" onclick="switchTab('powergen', this)">Power Registry</div>
+        <div class="tab active" onclick="switchTab('abilities', this)">📖 Abilities</div>
+        <div class="tab" onclick="switchTab('ores', this)">📖 Ores</div>
+        <div class="tab" onclick="switchTab('entities', this)">📖 Entities</div>
+        <div class="tab" onclick="switchTab('fabricator', this)">🛠️ Suit Fabricator</div>
+        <div class="tab" onclick="switchTab('registry', this)">🛠️ Power Registry</div>
     </div>
 
-    <div id="explorer" class="page active"><div id="explorer-content" class="grid"></div></div>
+    <div id="explorer-view" class="view active">
+        <div id="content" class="grid"></div>
+    </div>
 
-    <div id="suitgen" class="page">
-        <div class="card">
-            <label>Suit Identifier</label>
-            <input type="text" id="suitId" value="template_suit">
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                <label class="opt"><input type="checkbox" id="isNano"> Nano-Tech</label>
-                <label class="opt"><input type="checkbox" id="hasCape"> Cape</label>
-                <label class="opt"><input type="checkbox" id="allowMask" checked> Allow Mask</label>
-                <label class="opt"><input type="checkbox" id="allowHood" checked> Allow Hood</label>
-                <label class="opt"><input type="checkbox" id="allowSuitOff" checked> Allow Suit Off</label>
+    <div id="fabricator-view" class="view">
+        <div class="section" style="max-width: 600px; margin: 0 auto;">
+            <div class="name">Suit Fabricator</div>
+            <div class="desc">Configure and generate Meta Core attachable JSON files.</div>
+            
+            <div class="input-group">
+                <label>Suit Identifier</label>
+                <input type="text" id="fab-suitId" placeholder="e.g. mark_85" value="template_suit">
             </div>
-            <button class="btn-gen" onclick="downloadSuit()">GENERATE JSON FILE</button>
+
+            <div class="input-group">
+                <label>Logic & Animation Toggles</label>
+                <div class="options-grid">
+                    <label class="opt"><input type="checkbox" id="isNano"> Nano-Tech</label>
+                    <label class="opt"><input type="checkbox" id="hasCape"> Enable Cape</label>
+                    <label class="opt"><input type="checkbox" id="allowMask" checked> Allow Mask</label>
+                    <label class="opt"><input type="checkbox" id="allowHood" checked> Allow Hood</label>
+                    <label class="opt"><input type="checkbox" id="allowSuitOff" checked> Allow Suit Off</label>
+                </div>
+            </div>
+
+            <button class="btn-primary" onclick="downloadFiles()">Generate JSON</button>
         </div>
     </div>
 
-    <div id="powergen" class="page">
-        <div class="grid">
-            <div class="card">
-                <h2>1. Identity & Effects</h2>
-                <label>Registry Key</label><input type="text" id="suitIdReg" value="hero_key">
-                <label>Suit Item</label><input type="text" id="suitItem" value="suit:hero_suit">
+    <div id="registry-view" class="view">
+        <div class="grid" style="align-items: start;">
+            <div class="section">
+                <div class="section-title">1. Identity</div>
+                <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div><label>Registry Key</label><input type="text" id="reg-suitId" value="hero_key"></div>
+                    <div><label>Suit Item</label><input type="text" id="suitItem" value="suit:hero_suit"></div>
+                    <div><label>Master Tag</label><input type="text" id="masterTag" value="has_hero_powers"></div>
+                    <div><label>DNA Tag</label><input type="text" id="dnaTag" value="dna:hero"></div>
+                </div>
+                
+                <label class="opt" style="margin-top: 20px; width: fit-content;">
+                    <input type="checkbox" id="useInjections" onchange="document.getElementById('injBox').style.display = this.checked ? 'grid':'none'"> 
+                    Enable DNA Injections
+                </label>
+
+                <div id="injBox" class="grid" style="display:none; margin-top:15px; grid-template-columns: 1fr 1fr; gap: 15px; padding-top: 15px; border-top: 1px solid var(--card-border);">
+                    <div><label>Injection Item</label><input type="text" id="injItem" value="injection:hero"></div>
+                    <div><label>Empty Item</label><input type="text" id="emptyItem" value="injection:empty"></div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">2. Effects & Tags</div>
                 <div id="effectContainer"></div>
                 <button class="btn-add" onclick="addEffectRow()">+ Add Potion Effect</button>
-            </div>
-            <div class="card">
-                <h2>3. Ability Selection</h2>
-                <div class="ability-grid" id="abilitiesContainer"></div>
+                
+                <div style="margin-top:24px;">
+                    <label>Manual Power Tags (comma separated)</label>
+                    <input type="text" id="customTags" placeholder="sound:step, immune:fire">
+                </div>
             </div>
         </div>
-        <div class="card" style="margin-top:20px;">
-            <h2>4. Lightning Aura</h2>
+
+        <div class="section" style="margin-top: 24px;">
+            <div class="section-title">3. Item & Ability Selection</div>
+            <div class="ability-grid" id="abilitiesContainer"></div>
+        </div>
+
+        <div class="section" style="margin-top: 24px;">
+            <div class="section-title">4. Lightning Aura Mapping</div>
+            <p class="desc" style="margin-top: -5px; margin-bottom: 15px;">Enter the number the player will input to trigger each aura color. Leave blank to omit.</p>
             <div class="aura-grid" id="auraContainer"></div>
         </div>
-        <button class="btn-gen" onclick="generateRegistry()">GENERATE REGISTRY JSON</button>
-        <div id="output" style="margin-top:20px;">// Registry JSON...</div>
+
+        <button class="btn-primary" onclick="generateRegistry()">Generate Registry JSON</button>
+
+        <div id="output-container">
+            <button class="copy-btn" onclick="const t=document.getElementById('output').textContent; navigator.clipboard.writeText(t); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+            <div id="output">// Registry JSON will appear here...</div>
+        </div>
     </div>
 </div>
 
 <script>
-    // --- NAV ---
-    function switchTab(id, el) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        el.classList.add('active');
+// ==========================================
+// 1. DATA SYSTEM (EXPLORER)
+// ==========================================
+const DATA = {
+    abilities: [
+        { name: "Super Strength", desc: "Increases melee damage massively.", scaling: { damage: "base * (level / 10)", knockback: "level * 0.2" }, visuals: { aura: "red", particles: "impact_shockwave" }, tags: ["passive", "combat"] },
+        { name: "Super Speed", desc: "Move at extreme speeds.", scaling: { speed: "base + (level * 0.5)" }, visuals: { trailColor: "yellow", lightning: true }, tags: ["movement"] }
+    ],
+    ores: [
+        { name: "Titanium Ore", desc: "High-tier crafting material.", spawn: { dimension: "overworld", y: "-40 to 20", rarity: "uncommon" }, drops: ["titanium_ingot"] },
+        { name: "Kryptonite", desc: "Radioactive mineral from crashed meteors.", spawn: { structure: "Kryptonite Meteor", rarity: "rare" }, drops: ["kryptonite_shard"] }
+    ],
+    entities: [
+        { name: "Radioactive Spider", desc: "A glowing arachnid with mutating venom.", spawn: { biome: "forest", light_level: "low" }, drops: ["radioactive_gland"] }
+    ]
+};
+
+// ==========================================
+// 2. REGISTRY DATA (ARCHITECT)
+// ==========================================
+const colors = ["red", "blue", "yellow", "orange", "green", "purple", "pink", "white", "black", "cyan"];
+const auraColors = ["Red", "Blue", "Yellow", "Orange", "Green", "Purple", "Pink", "White", "Black"];
+const hexMap = { Red: "#ff4444", Blue: "#4444ff", Yellow: "#ffff44", Orange: "#ffaa00", Green: "#44ff44", Purple: "#aa44ff", Pink: "#ff88ff", White: "#ffffff", Black: "#555555" };
+
+const REGISTRY_ABILITIES = [
+    { name: "Area Teleport", id: "ability:area_teleport", type: "item_tag", color: true, icon: "portal" },
+    { name: "Chest Energy Beam", id: "ability:chest_energy_beam_<color>", type: "item_only", color: true, icon: "chest_energy_beam" },
+    { name: "Double Energy Beam", id: "ability:double_energy_beam_<color>", type: "item_only", color: true, icon: "double_energy_beam" },
+    { name: "Energy Beam", id: "ability:energy_beam_<color>", type: "item_only", color: true, icon: "energy_beam" },
+    { name: "Energy Bomb", id: "ability:energy_bomb", type: "item_tag", scale: true, color: true, icon: "energy_bomb" },
+    { name: "Extra Life", id: "ability:extra_life", type: "tag_only", scale: true },
+    { name: "Fire Breath", id: "ability:fire_breath", type: "item_tag", scale: true, icon: "fire_breath" },
+    { name: "Flight", id: "ability:flight", type: "item_tag", scale: true, icon: "flight" },
+    { name: "Forcefield", id: "ability:forcefield_<color>", type: "item_only", color: true, icon: "forcefield" },
+    { name: "Frostbite Wave", id: "ability:frostbite_wave", type: "item_only", icon: "frostbite_wave" },
+    { name: "Gravity Flip", id: "ability:gravity_flip", type: "item_only", icon: "gravity_flip" },
+    { name: "Ground Smash", id: "ability:ground_smash", type: "item_tag", scale: true, icon: "ground_smash" },
+    { name: "Head Energy Beam", id: "ability:head_energy_beam_<color>", type: "item_only", color: true, icon: "head_energy_beam" },
+    { name: "Healing Aura", id: "ability:healing_aura", type: "item_only", icon: "healing_aura" },
+    { name: "Heat Vision", id: "ability:heat_vision", type: "item_tag", scale: true, color: true, icon: "heat_vision" },
+    { name: "Ice Breath", id: "ability:ice_breath", type: "item_tag", scale: true, icon: "ice_breath" },
+    { name: "Kinetic Pulse", id: "ability:kinetic_pulse", type: "item_only", icon: "kinetic_pulse" },
+    { name: "Lightning Beam", id: "ability:lightning_beam_<color>", type: "item_only", color: true, icon: "lightning_beam" },
+    { name: "Lightning Strike", id: "ability:lightning_strike", type: "item_only", icon: "lightning_strike" },
+    { name: "Phase", id: "ability:phase", type: "item_only", icon: "phase" },
+    { name: "Photo Healing", id: "ability:photo_healing", type: "tag_only" },
+    { name: "Power Blast", id: "ability:power_blast", type: "item_tag", scale: true, color: true, icon: "power_blast" },
+    { name: "Prism Shot", id: "ability:prism_shot", type: "item_tag", scale: true, color: true, icon: "prism_shot" },
+    { name: "Rocket Slam", id: "ability:rocket_slam", type: "item_tag", scale: true, icon: "rocket_slam" },
+    { name: "Super Speed", id: "ability:super_speed", type: "item_tag", scale: true, color: true, icon: "super_speed" },
+    { name: "Super Strength", id: "ability:super_strength", type: "tag_only", scale: true },
+    { name: "Telekinesis", id: "ability:telekinesis", type: "item_only", icon: "telekinesis" },
+    { name: "Thunderclap", id: "ability:thunderclap", type: "item_tag", scale: true, icon: "thunderclap" },
+    { name: "Undying", id: "ability:undying", type: "tag_only" },
+    { name: "Mask Off", id: "animation.suit.mask_off", type: "item_only", icon: "mask_off" },
+    { name: "Hood Down", id: "animation.suit.hood_down", type: "item_only", icon: "hood_down" },
+    { name: "Suit Off", id: "animation.suit.suit_off", type: "item_only", icon: "suit_off" },
+    { name: "Nano Toggle", id: "ability:toggle_anim_suit", type: "item_only", icon: "toggle_anim_suit" }
+];
+
+// ==========================================
+// 3. UI CONTROLLERS
+// ==========================================
+function switchTab(tab, el) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+
+    if (tab === 'fabricator') {
+        document.getElementById('fabricator-view').classList.add('active');
+    } else if (tab === 'registry') {
+        document.getElementById('registry-view').classList.add('active');
+    } else {
+        document.getElementById('explorer-view').classList.add('active');
+        renderExplorer(tab);
     }
+}
 
-    // --- EXPLORER DATA ---
-    const DATA = { abilities: [{name: "Super Strength", desc: "Melee damage.", tags: ["passive"]}], ores: [{name: "Titanium", desc: "Crafting.", tags: ["rare"]}] };
-    function renderExplorer() {
-        const c = document.getElementById("explorer-content");
-        Object.values(DATA).flat().forEach(i => {
-            c.innerHTML += `<div class="card"><div style="font-weight:800; font-size:1.2rem;">${i.name}</div><p>${i.desc}</p></div>`;
-        });
+// --- EXPLORER LOGIC ---
+function buildSection(title, data) {
+    if (!data) return "";
+    let html = `<div class="section-title">${title}</div><div class="tags-container">`;
+    if (Array.isArray(data)) {
+        data.forEach(val => { html += `<div class="tag">${val}</div>`; });
+    } else {
+        Object.entries(data).forEach(([k, v]) => { html += `<div class="tag"><strong>${k}:</strong> ${v}</div>`; });
     }
+    html += `</div><br>`;
+    return html;
+}
 
-    // --- SUIT GEN LOGIC ---
-    function downloadSuit() {
-        const suitId = document.getElementById('suitId').value;
-        const isNano = document.getElementById('isNano').checked;
-        const config = { 
-            id: suitId, isNano, hasCape: document.getElementById('hasCape').checked,
-            allowMask: document.getElementById('allowMask').checked, allowHood: document.getElementById('allowHood').checked, allowSuitOff: document.getElementById('allowSuitOff').checked
-        };
-        
-        let textures = { "enchanted": "textures/misc/enchanted_item_glint" };
-        if (isNano) { for (let i = 0; i <= 7; i++) textures[`nano_${i}`] = `textures/entity/suits/templates/suits/example_nano/${suitId}_${i}`; } 
-        else { textures["default"] = `textures/entity/suits/templates/suits/${suitId}`; }
+function renderExplorer(tab) {
+    const container = document.getElementById("content");
+    container.innerHTML = "";
+    if (!DATA[tab]) return;
 
-        const attachableJson = {
-            "format_version": "1.21.0",
-            "minecraft:attachable": {
-                "description": {
-                    "identifier": `suit:${suitId}`,
-                    "materials": { "default": "entity_emissive_alpha", "enchanted": "armor_enchanted" },
-                    "textures": textures,
-                    "geometry": { "default": `geometry.${suitId}` },
-                    "animations": { "suit_logic": `controller.animation.${suitId}`, "cape": "animation.suit.cape" },
-                    "scripts": { "pre_animation": [`variable.hood = ${config.allowHood ? "query.property('suit:hood_state')" : "0"};`, `variable.mask = ${config.allowMask ? "query.property('suit:mask_state')" : "0"};`], "animate": ["suit_logic"] },
-                    "render_controllers": [isNano ? "controller.render.nano_suit_template" : "controller.render.suit_template"]
-                }
-            }
-        };
-        const blob = new Blob([JSON.stringify(attachableJson, null, 2)], { type: "application/json" });
-        const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = `${suitId}.json`; link.click();
-    }
+    DATA[tab].forEach((item, index) => {
+        let extra = "";
+        const keys = ["scaling", "mechanics", "visuals", "spawn", "contains", "drops", "abilities", "tags"];
+        keys.forEach(key => { if (item[key]) extra += buildSection(key.replace('_', ' '), item[key]); });
 
-    // --- POWER REGISTRY LOGIC ---
-    const abilityDb = [{ name: "Super Strength", id: "ability:super_strength", type: "tag_only" }, { name: "Energy Beam", id: "ability:energy_beam_<color>", type: "item_only", color: true }];
-    const auraColors = ["Red", "Blue", "Yellow"];
+        const card = document.createElement("div");
+        card.className = "card";
+        card.style.animationDelay = `${index * 0.05}s`;
+        card.innerHTML = `<div class="name">${item.name}</div><div class="desc">${item.desc}</div>${extra}`;
+        container.appendChild(card);
+    });
+}
+
+// --- FABRICATOR LOGIC ---
+function generateAttachable(config) {
+    const suitId = config.id;
+    const isNano = config.isNano;
+    let textures = { "enchanted": "textures/misc/enchanted_item_glint" };
     
-    function initAbilities() {
-        const c = document.getElementById('abilitiesContainer');
-        abilityDb.forEach((ab, i) => {
-            c.innerHTML += `<div class="ability-card" id="card_${i}"><label class="ability-header"><input type="checkbox" onchange="document.getElementById('card_${i}').classList.toggle('active', this.checked)"> ${ab.name}</label></div>`;
-        });
+    if (isNano) {
+        for (let i = 0; i <= 7; i++) { textures[`nano_${i}`] = `textures/entity/suits/templates/suits/example_nano/${suitId}_${i}`; }
+    } else {
+        textures["default"] = `textures/entity/suits/templates/suits/${suitId}`;
     }
 
-    function addEffectRow() {
-        const div = document.createElement('div');
-        div.className = 'dynamic-row';
-        div.innerHTML = `<input type="text" placeholder="minecraft:effect_id"> <input type="number" value="1" style="width:60px;"> <button onclick="this.parentElement.remove()" style="background:#444; border:none; color:#fff; cursor:pointer;">X</button>`;
-        document.getElementById('effectContainer').appendChild(div);
+    let preAnimation = [
+        `variable.hood = ${config.allowHood ? "query.property('suit:hood_state')" : "0"};`,
+        `variable.mask = ${config.allowMask ? "query.property('suit:mask_state')" : "0"};`,
+        `variable.hidden = ${config.allowSuitOff ? "query.property('suit:hidden')" : "0"};`
+    ];
+
+    if (isNano) {
+        preAnimation.push(
+            "variable.nano_state = query.property('suit:toggle_anim_suit');",
+            "variable.nano_timer = math.clamp((variable.nano_timer ?? 0) + (variable.nano_state ? query.delta_time * 12 : -query.delta_time * 12), 0, 7.9);",
+            "variable.nano_tex_index = math.floor(variable.nano_timer);"
+        );
     }
 
-    function initAuras() {
-        auraColors.forEach(c => {
-            document.getElementById('auraContainer').innerHTML += `<div class="card"><label>${c}</label><input type="number" placeholder="#"></div>`;
-        });
+    const json = {
+        "format_version": "1.21.0",
+        "minecraft:attachable": {
+            "description": {
+                "identifier": `suit:${suitId}`,
+                "materials": { "default": "entity_emissive_alpha", "enchanted": "armor_enchanted" },
+                "textures": textures,
+                "geometry": { "default": `geometry.${suitId}` },
+                "animations": {
+                    "suit_logic": `controller.animation.${suitId}`,
+                    "mask_off": "animation.suit.mask_off",
+                    "hood_down": "animation.suit.hood_down",
+                    "suit_off": "animation.suit.suit_off",
+                    "cape": "animation.suit.cape"
+                },
+                "scripts": {
+                    "pre_animation": preAnimation,
+                    "animate": [
+                        "suit_logic",
+                        config.hasCape ? { "cape": "variable.last_g = (query.is_on_ground ? query.life_time : (variable.last_g ?? query.life_time)); return query.modified_move_speed > 0.01 && (query.life_time - variable.last_g < 0.6 || !query.is_sprinting);" } : null
+                    ].filter(Boolean)
+                },
+                "render_controllers": [isNano ? "controller.render.nano_suit_template" : "controller.render.suit_template"]
+            }
+        }
+    };
+    return JSON.stringify(json, null, 2);
+}
+
+function downloadFiles() {
+    const suitName = document.getElementById('fab-suitId').value || 'template_suit';
+    const config = {
+        id: suitName,
+        isNano: document.getElementById('isNano').checked,
+        hasCape: document.getElementById('hasCape').checked,
+        allowMask: document.getElementById('allowMask').checked,
+        allowHood: document.getElementById('allowHood').checked,
+        allowSuitOff: document.getElementById('allowSuitOff').checked
+    };
+
+    const blob = new Blob([generateAttachable(config)], { type: "application/json" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `${suitName}.json`;
+    link.click();
+}
+
+// --- REGISTRY ARCHITECT LOGIC ---
+function initRegistryUI() {
+    const abContainer = document.getElementById('abilitiesContainer');
+    REGISTRY_ABILITIES.forEach((ab, i) => {
+        abContainer.innerHTML += `
+            <div class="ability-card" id="card_${i}">
+                <label class="ability-header">
+                    <input type="checkbox" id="ab_check_${i}" onchange="document.getElementById('card_${i}').classList.toggle('active', this.checked)">
+                    <span>${ab.name}</span>
+                </label>
+                ${ab.scale || ab.color ? `
+                <div class="ability-controls">
+                    ${ab.scale ? `<input type="number" id="ab_lv_${i}" placeholder="Scale" value="100" style="width: 40%; padding: 8px;">`:''}
+                    ${ab.color ? `
+                    <select id="ab_col_${i}" style="width: 60%; padding: 8px;">
+                        <option value="" disabled selected>Color</option>
+                        ${colors.map(c=>`<option value="${c}">${c.charAt(0).toUpperCase() + c.slice(1)}</option>`).join('')}
+                    </select>`:''}
+                </div>` : ''}
+            </div>`;
+    });
+
+    const auraContainer = document.getElementById('auraContainer');
+    auraColors.forEach(color => {
+        auraContainer.innerHTML += `
+            <div class="aura-card">
+                <div style="display:flex; align-items:center; gap:8px; color: ${hexMap[color]}; font-weight: bold;">
+                    <span class="aura-indicator" style="background-color: ${hexMap[color]}"></span>
+                    <span>${color}</span>
+                </div>
+                <input type="number" id="aura_val_${color}" placeholder="#" min="1" max="99" style="text-align: center; padding: 8px;">
+            </div>`;
+    });
+}
+
+function addEffectRow() {
+    const div = document.createElement('div');
+    div.className = 'dynamic-row';
+    div.innerHTML = `<input type="text" placeholder="minecraft:effect_id" class="eff-id" style="flex:2; padding: 8px;"> <input type="number" value="1" placeholder="Lvl" class="eff-lv" style="flex:1; padding: 8px;"> <button class="btn-del" onclick="this.parentElement.remove()">X</button>`;
+    document.getElementById('effectContainer').appendChild(div);
+}
+
+function generateRegistry() {
+    const suitId = document.getElementById('reg-suitId').value;
+    const res = {
+        suitItem: document.getElementById('suitItem').value,
+        tag: document.getElementById('masterTag').value,
+        dnaTag: document.getElementById('dnaTag').value,
+        powerTags: [], effects: [], abilities: [], auras: []
+    };
+
+    if(document.getElementById('useInjections').checked) {
+        res.injectionItem = document.getElementById('injItem').value;
+        res.emptyItem = document.getElementById('emptyItem').value;
     }
 
-    function generateRegistry() {
-        const res = { suit: document.getElementById('suitIdReg').value, effects: [] };
-        document.getElementById('output').textContent = JSON.stringify(res, null, 4);
-    }
+    document.querySelectorAll('#effectContainer .dynamic-row').forEach(row => {
+        const id = row.querySelector('.eff-id').value;
+        if(id) res.effects.push({ id: id, level: parseInt(row.querySelector('.eff-lv').value) });
+    });
 
-    // Init
-    renderExplorer();
-    initAbilities();
-    initAuras();
-    addEffectRow();
+    REGISTRY_ABILITIES.forEach((ab, i) => {
+        if(!document.getElementById(`ab_check_${i}`).checked) return;
+        const scaleEl = document.getElementById(`ab_lv_${i}`);
+        const colEl = document.getElementById(`ab_col_${i}`);
+        const lv = scaleEl ? scaleEl.value : null;
+        const col = colEl ? colEl.value : null;
+
+        if(ab.type !== 'tag_only') {
+            res.abilities.push({ name: ab.name, itemId: ab.id.replace('<color>', col || 'red'), icon: `textures/items/abilities/${ab.icon}` });
+        }
+        if(lv) res.powerTags.push(`${ab.id.split(':')[1].replace('_<color>', '')}_${lv}`);
+        if(col && ab.type === 'item_tag') res.powerTags.push(`${ab.id.split(':')[1]}_${col}`);
+    });
+
+    const custom = document.getElementById('customTags').value;
+    if(custom) custom.split(',').forEach(t => { if(t.trim()) res.powerTags.push(t.trim()) });
+
+    auraColors.forEach(color => {
+        const valInput = document.getElementById(`aura_val_${color}`).value;
+        if (valInput && valInput.trim() !== "") {
+            res.auras.push({ name: `${color} Lightning Aura`, value: parseInt(valInput), icon: `textures/entity/lightning/lightning_${color.toLowerCase()}` });
+        }
+    });
+
+    let json = JSON.stringify(res, null, 4);
+    // Flatten specific objects to save screen space
+    json = json.replace(/\{\s+"name": "(.*?)",\s+"itemId": "(.*?)",\s+"icon": "(.*?)"\s+\}/g, '{ name: "$1", itemId: "$2", icon: "$3" }');
+    json = json.replace(/\{\s+"name": "(.*?)",\s+"value": (\d+),\s+"icon": "(.*?)"\s+\}/g, '{ name: "$1", value: $2, icon: "$3" }');
+    json = json.replace(/\{\s+"id": "(.*?)",\s+"level": (\d+)\s+\}/g, '{ id: "$1", level: $2 }');
+
+    document.getElementById('output').textContent = `"${suitId}": ${json},`;
+}
+
+// ==========================================
+// 4. INITIALIZATION
+// ==========================================
+renderExplorer("abilities");
+initRegistryUI();
+addEffectRow();
+
 </script>
 </body>
 </html>
