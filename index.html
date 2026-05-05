@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --cyan: #00d4ff; --cyan-glow: rgba(0, 212, 255, 0.4);
+            --cyan: #00e5ff; --cyan-glow: rgba(0, 229, 255, 0.4);
             --bg-dark: #0f1115; --card-bg: rgba(255, 255, 255, 0.03); 
             --card-border: rgba(255, 255, 255, 0.08); --text-main: #e2e8f0; --text-muted: #94a3b8;
         }
@@ -25,21 +25,23 @@
         .page { display: none; }
         .page.active { display: block; }
 
-        /* UI Elements */
+        /* Cards & Form Elements */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
         .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 24px; }
+        h2 { font-size: 0.9rem; color: var(--cyan); text-transform: uppercase; margin: 0 0 15px 0; border-bottom: 1px solid #333; padding-bottom: 8px; }
         label { display: block; font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
-        input, select { width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid var(--card-border); color: #fff; border-radius: 8px; box-sizing: border-box; margin-bottom: 15px; font-family: 'JetBrains Mono'; }
+        input, select { width: 100%; padding: 12px; background: #000; border: 1px solid var(--card-border); color: #fff; border-radius: 8px; box-sizing: border-box; margin-bottom: 15px; font-family: 'JetBrains Mono'; }
         
-        .btn-gen { width: 100%; padding: 15px; background: var(--cyan); color: #000; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; text-transform: uppercase; margin-top: 10px; }
-        .btn-gen:hover { box-shadow: 0 0 15px var(--cyan-glow); }
-        
-        /* Power Registry Specifics */
-        .ability-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; max-height: 400px; overflow-y: auto; padding-right: 5px; }
-        .ability-card { background: #1a1a1a; border: 1px solid var(--card-border); border-radius: 6px; padding: 12px; }
+        /* Registry & Ability Specifics */
+        .ability-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; max-height: 400px; overflow-y: auto; }
+        .ability-card { background: #1a1a1a; border: 1px solid var(--card-border); border-radius: 6px; padding: 12px; transition: 0.2s; }
         .ability-card.active { border-color: var(--cyan); }
-        .tag { font-family: 'JetBrains Mono'; background: rgba(0, 229, 255, 0.08); color: var(--cyan); border: 1px solid rgba(0, 229, 255, 0.2); padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; display: inline-block; margin: 4px; }
-        #output { background: #050505; color: #0f0; padding: 15px; border-radius: 8px; border: 1px solid #333; font-family: 'Consolas'; white-space: pre-wrap; font-size: 0.85rem; }
+        .ability-header { display: flex; align-items: center; gap: 10px; font-weight: bold; cursor: pointer; }
+        .aura-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .dynamic-row { display: flex; gap: 8px; margin-bottom: 10px; }
+        .btn-gen { width: 100%; padding: 15px; background: var(--cyan); color: #000; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; text-transform: uppercase; margin-top: 10px; }
+        .btn-add { background: transparent; color: var(--cyan); border: 1px dashed var(--cyan); padding: 8px; width: 100%; cursor: pointer; }
+        #output { background: #000; color: #0f0; padding: 15px; border-radius: 8px; font-family: 'Consolas', monospace; font-size: 0.85rem; overflow-x: auto; white-space: pre; }
     </style>
 </head>
 <body>
@@ -55,36 +57,39 @@
     <div id="explorer" class="page active"><div id="explorer-content" class="grid"></div></div>
 
     <div id="suitgen" class="page">
-        <div class="grid">
-            <div class="card">
-                <label>Suit Identifier</label>
-                <input type="text" id="suitId" value="template_suit">
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                    <label><input type="checkbox" id="isNano"> Nano-Tech</label>
-                    <label><input type="checkbox" id="hasCape"> Cape</label>
-                    <label><input type="checkbox" id="allowMask" checked> Mask</label>
-                    <label><input type="checkbox" id="allowHood" checked> Hood</label>
-                    <label><input type="checkbox" id="allowSuitOff" checked> Suit Off</label>
-                </div>
-                <button class="btn-gen" onclick="downloadSuit()">GENERATE JSON</button>
+        <div class="card">
+            <label>Suit Identifier</label>
+            <input type="text" id="suitId" value="template_suit">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <label class="opt"><input type="checkbox" id="isNano"> Nano-Tech</label>
+                <label class="opt"><input type="checkbox" id="hasCape"> Cape</label>
+                <label class="opt"><input type="checkbox" id="allowMask" checked> Allow Mask</label>
+                <label class="opt"><input type="checkbox" id="allowHood" checked> Allow Hood</label>
+                <label class="opt"><input type="checkbox" id="allowSuitOff" checked> Allow Suit Off</label>
             </div>
+            <button class="btn-gen" onclick="downloadSuit()">GENERATE JSON FILE</button>
         </div>
     </div>
 
     <div id="powergen" class="page">
         <div class="grid">
             <div class="card">
-                <label>Registry Key</label><input type="text" id="regSuitId" value="hero_key">
+                <h2>1. Identity & Effects</h2>
+                <label>Registry Key</label><input type="text" id="suitIdReg" value="hero_key">
                 <label>Suit Item</label><input type="text" id="suitItem" value="suit:hero_suit">
                 <div id="effectContainer"></div>
-                <button class="btn-gen" style="background:transparent; border:1px dashed var(--cyan); color:var(--cyan);" onclick="addEffectRow()">+ Add Effect</button>
+                <button class="btn-add" onclick="addEffectRow()">+ Add Potion Effect</button>
             </div>
             <div class="card">
-                <label>Abilities</label>
+                <h2>3. Ability Selection</h2>
                 <div class="ability-grid" id="abilitiesContainer"></div>
             </div>
         </div>
-        <button class="btn-gen" onclick="generateRegistry()">GENERATE REGISTRY</button>
+        <div class="card" style="margin-top:20px;">
+            <h2>4. Lightning Aura</h2>
+            <div class="aura-grid" id="auraContainer"></div>
+        </div>
+        <button class="btn-gen" onclick="generateRegistry()">GENERATE REGISTRY JSON</button>
         <div id="output" style="margin-top:20px;">// Registry JSON...</div>
     </div>
 </div>
@@ -99,50 +104,79 @@
     }
 
     // --- EXPLORER DATA ---
-    const DATA = {
-        abilities: [{name: "Super Strength", desc: "Increases melee damage.", tags: ["passive", "combat"]}, {name: "Super Speed", desc: "Extreme speed.", tags: ["movement"]}],
-        ores: [{name: "Titanium", desc: "Crafting material.", tags: ["rare"]}],
-        structures: [{name: "Meteor", desc: "Radioactive.", tags: ["biome:plains"]}]
-    };
+    const DATA = { abilities: [{name: "Super Strength", desc: "Melee damage.", tags: ["passive"]}], ores: [{name: "Titanium", desc: "Crafting.", tags: ["rare"]}] };
     function renderExplorer() {
         const c = document.getElementById("explorer-content");
         Object.values(DATA).flat().forEach(i => {
-            c.innerHTML += `<div class="card"><div style="font-weight:800; font-size:1.2rem;">${i.name}</div><p>${i.desc}</p>${i.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>`;
+            c.innerHTML += `<div class="card"><div style="font-weight:800; font-size:1.2rem;">${i.name}</div><p>${i.desc}</p></div>`;
         });
     }
 
-    // --- SUIT LOGIC ---
+    // --- SUIT GEN LOGIC ---
     function downloadSuit() {
-        const id = document.getElementById('suitId').value;
-        const config = { id, isNano: document.getElementById('isNano').checked, hasCape: document.getElementById('hasCape').checked };
-        const content = JSON.stringify({ "format_version": "1.21.0", "minecraft:attachable": { "description": { "identifier": `suit:${config.id}` } } }, null, 2);
-        const blob = new Blob([content], { type: "application/json" });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = `${id}.json`;
-        link.click();
+        const suitId = document.getElementById('suitId').value;
+        const isNano = document.getElementById('isNano').checked;
+        const config = { 
+            id: suitId, isNano, hasCape: document.getElementById('hasCape').checked,
+            allowMask: document.getElementById('allowMask').checked, allowHood: document.getElementById('allowHood').checked, allowSuitOff: document.getElementById('allowSuitOff').checked
+        };
+        
+        let textures = { "enchanted": "textures/misc/enchanted_item_glint" };
+        if (isNano) { for (let i = 0; i <= 7; i++) textures[`nano_${i}`] = `textures/entity/suits/templates/suits/example_nano/${suitId}_${i}`; } 
+        else { textures["default"] = `textures/entity/suits/templates/suits/${suitId}`; }
+
+        const attachableJson = {
+            "format_version": "1.21.0",
+            "minecraft:attachable": {
+                "description": {
+                    "identifier": `suit:${suitId}`,
+                    "materials": { "default": "entity_emissive_alpha", "enchanted": "armor_enchanted" },
+                    "textures": textures,
+                    "geometry": { "default": `geometry.${suitId}` },
+                    "animations": { "suit_logic": `controller.animation.${suitId}`, "cape": "animation.suit.cape" },
+                    "scripts": { "pre_animation": [`variable.hood = ${config.allowHood ? "query.property('suit:hood_state')" : "0"};`, `variable.mask = ${config.allowMask ? "query.property('suit:mask_state')" : "0"};`], "animate": ["suit_logic"] },
+                    "render_controllers": [isNano ? "controller.render.nano_suit_template" : "controller.render.suit_template"]
+                }
+            }
+        };
+        const blob = new Blob([JSON.stringify(attachableJson, null, 2)], { type: "application/json" });
+        const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = `${suitId}.json`; link.click();
     }
 
-    // --- REGISTRY LOGIC ---
-    const abilityDb = [{ name: "Flight", id: "ability:flight" }, { name: "Energy Beam", id: "ability:energy_beam" }];
+    // --- POWER REGISTRY LOGIC ---
+    const abilityDb = [{ name: "Super Strength", id: "ability:super_strength", type: "tag_only" }, { name: "Energy Beam", id: "ability:energy_beam_<color>", type: "item_only", color: true }];
+    const auraColors = ["Red", "Blue", "Yellow"];
+    
     function initAbilities() {
         const c = document.getElementById('abilitiesContainer');
         abilityDb.forEach((ab, i) => {
-            c.innerHTML += `<div class="ability-card" id="card_${i}"><label><input type="checkbox" onchange="this.parentElement.parentElement.classList.toggle('active', this.checked)"> ${ab.name}</label></div>`;
+            c.innerHTML += `<div class="ability-card" id="card_${i}"><label class="ability-header"><input type="checkbox" onchange="document.getElementById('card_${i}').classList.toggle('active', this.checked)"> ${ab.name}</label></div>`;
         });
     }
+
     function addEffectRow() {
         const div = document.createElement('div');
-        div.style.display = "flex"; div.innerHTML = `<input type="text" placeholder="minecraft:effect"> <button onclick="this.parentElement.remove()" style="background:#522; color:#f66; border:none; padding:5px; margin-left:5px;">X</button>`;
+        div.className = 'dynamic-row';
+        div.innerHTML = `<input type="text" placeholder="minecraft:effect_id"> <input type="number" value="1" style="width:60px;"> <button onclick="this.parentElement.remove()" style="background:#444; border:none; color:#fff; cursor:pointer;">X</button>`;
         document.getElementById('effectContainer').appendChild(div);
     }
+
+    function initAuras() {
+        auraColors.forEach(c => {
+            document.getElementById('auraContainer').innerHTML += `<div class="card"><label>${c}</label><input type="number" placeholder="#"></div>`;
+        });
+    }
+
     function generateRegistry() {
-        const res = { key: document.getElementById('regSuitId').value, suit: document.getElementById('suitItem').value };
+        const res = { suit: document.getElementById('suitIdReg').value, effects: [] };
         document.getElementById('output').textContent = JSON.stringify(res, null, 4);
     }
 
+    // Init
     renderExplorer();
     initAbilities();
+    initAuras();
+    addEffectRow();
 </script>
 </body>
 </html>
