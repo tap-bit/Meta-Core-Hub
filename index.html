@@ -306,35 +306,26 @@ input:focus, select:focus {
 </div>
 
 <script>
-// ==========================================
-// 1. DATA SYSTEM (EXPLORER)
-// ==========================================
 const DATA = {
     abilities: [
         { name: "Super Strength", desc: "Increases melee damage massively.", scaling: { damage: "base * (level / 10)", knockback: "level * 0.2" }, visuals: { aura: "red", particles: "impact_shockwave" }, tags: ["passive", "combat"] },
         { name: "Super Speed", desc: "Move at extreme speeds.", scaling: { speed: "base + (level * 0.5)" }, visuals: { trailColor: "yellow", lightning: true }, tags: ["movement"] },
-        // NEW WEB SWING
         { name: "Web Swing", desc: "Swing using web physics.", mechanics: { range: 40, velocity: 2 }, tags: ["movement"] }
     ],
     ores: [
         { name: "Titanium Ore", desc: "High-tier crafting material.", spawn: { dimension: "overworld", y: "-40 to 20", rarity: "uncommon" }, drops: ["titanium_ingot"] },
-        { name: "Kryptonite", desc: "Radioactive mineral from crashed meteors.", spawn: { structure: "Kryptonite Meteor", rarity: "rare" }, drops: ["kryptonite_shard"] },
-        // NEW BLUE KRYPTONITE
-        { name: "Blue Kryptonite", desc: "A unique isotopic variation of kryptonite.", spawn: { structure: "Blue Kryptonite Meteor", rarity: "very rare" }, drops: ["blue_kryptonite_shard"] }
+        { name: "Kryptonite", desc: "Radioactive mineral from crashed meteors.", spawn: { structure: "Kryptonite Meteor", rarity: "rare" }, drops: ["kryptonite"] },
+        { name: "Blue Kryptonite", desc: "A unique isotopic variation of kryptonite.", spawn: { structure: "Blue Kryptonite Meteor", rarity: "very rare" }, drops: ["blue kryptonite"] }
     ],
-    // NEW STRUCTURES ARRAY
     structures: [
         { name: "Kryptonite Meteor", desc: "A fallen radioactive rock from space.", spawn: { dimension: "overworld", biome: "plains" }, contains: ["kryptonite"] },
         { name: "Blue Kryptonite Meteor", desc: "A rare variant of fallen space debris.", spawn: { dimension: "overworld", biome: "plains" }, contains: ["blue kryptonite"] }
     ],
     entities: [
-        { name: "Radioactive Spider", desc: "A glowing arachnid with mutating venom.", spawn: { biome: "forest", light_level: "low" }, drops: ["radioactive_gland"] }
+        { name: "Radioactive Spider", desc: "A glowing arachnid with mutating venom.", spawn: { biome: "forest", light_level: "low" }, drops: ["radioactive dna"] }
     ]
 };
 
-// ==========================================
-// 2. REGISTRY DATA (ARCHITECT)
-// ==========================================
 const colors = ["red", "blue", "yellow", "orange", "green", "purple", "pink", "white", "black", "cyan"];
 const auraColors = ["Red", "Blue", "Yellow", "Orange", "Green", "Purple", "Pink", "White", "Black"];
 const hexMap = { Red: "#ff4444", Blue: "#4444ff", Yellow: "#ffff44", Orange: "#ffaa00", Green: "#44ff44", Purple: "#aa44ff", Pink: "#ff88ff", White: "#ffffff", Black: "#555555" };
@@ -375,9 +366,6 @@ const REGISTRY_ABILITIES = [
     { name: "Nano Toggle", id: "ability:toggle_anim_suit", type: "item_only", icon: "toggle_anim_suit" }
 ];
 
-// ==========================================
-// 3. UI CONTROLLERS
-// ==========================================
 function switchTab(tab, el) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     el.classList.add('active');
@@ -393,7 +381,6 @@ function switchTab(tab, el) {
     }
 }
 
-// --- EXPLORER LOGIC ---
 function buildSection(title, data) {
     if (!data) return "";
     let html = `<div class="section-title">${title}</div><div class="tags-container">`;
@@ -424,7 +411,6 @@ function renderExplorer(tab) {
     });
 }
 
-// --- FABRICATOR LOGIC ---
 function generateAttachable(config) {
     const suitId = config.id;
     const isNano = config.isNano;
@@ -497,7 +483,6 @@ function downloadFiles() {
     link.click();
 }
 
-// --- REGISTRY ARCHITECT LOGIC ---
 function initRegistryUI() {
     const abContainer = document.getElementById('abilitiesContainer');
     REGISTRY_ABILITIES.forEach((ab, i) => {
@@ -524,13 +509,17 @@ function initRegistryUI() {
     auraContainer.innerHTML = `
         <div class="input-group">
             <label>Select Lightning Aura Colors</label>
-            <select id="auraSelect" multiple style="height: 150px;">
+            <div class="options-grid">
                 ${auraColors.map(color => `
-                    <option value="${color}">
-                        ${color}
-                    </option>
+                    <label class="opt" style="color:${hexMap[color]}">
+                        <input type="checkbox" class="aura-check" value="${color}">
+                        <span style="display:flex; align-items:center; gap:8px;">
+                            <span class="aura-indicator" style="background-color:${hexMap[color]}"></span>
+                            ${color}
+                        </span>
+                    </label>
                 `).join('')}
-            </select>
+            </div>
         </div>
     `;
 }
@@ -578,8 +567,8 @@ function generateRegistry() {
     const custom = document.getElementById('customTags').value;
     if(custom) custom.split(',').forEach(t => { if(t.trim()) res.powerTags.push(t.trim()) });
 
-    const selectedAuras = Array.from(document.getElementById('auraSelect').selectedOptions)
-        .map(opt => opt.value);
+    const selectedAuras = Array.from(document.querySelectorAll('.aura-check:checked'))
+        .map(el => el.value);
     
     selectedAuras.forEach((color, index) => {
         res.auras.push({
@@ -597,9 +586,6 @@ function generateRegistry() {
     document.getElementById('output').textContent = `"${suitId}": ${json},`;
 }
 
-// ==========================================
-// 4. INITIALIZATION
-// ==========================================
 renderExplorer("abilities");
 initRegistryUI();
 addEffectRow();
