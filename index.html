@@ -459,20 +459,24 @@ function generateAttachable(config) {
     let textures = { "enchanted": "textures/misc/enchanted_item_glint" };
     
     if (isNano) {
-        for (let i = 0; i <= 7; i++) { textures[`nano_${i}`] = `textures/entity/suits/templates/suits/example_nano/${suitId}_${i}`; }
+        for (let i = 0; i <= 7; i++) { 
+            textures[`nano_${i}`] = `textures/entity/suits/templates/suits/example_nano/${suitId}_${i}`; 
+        }
     } else {
         textures["default"] = `textures/entity/suits/templates/suits/${suitId}`;
     }
 
+    // New logic: Read the single integer property and convert to variables
     let preAnimation = [
-        `variable.hood = ${config.allowHood ? "query.property('suit:hood_state')" : "0"};`,
-        `variable.mask = ${config.allowMask ? "query.property('suit:mask_state')" : "0"};`,
-        `variable.hidden = ${config.allowSuitOff ? "query.property('suit:hidden')" : "0"};`
+        "variable.visuals = query.property('suit:visuals');",
+        `variable.mask = (variable.visuals == 1 && ${config.allowMask ? "1" : "0"}) ? 1 : 0;`,
+        `variable.hood = (variable.visuals == 2 && ${config.allowHood ? "1" : "0"}) ? 1 : 0;`,
+        `variable.hidden = (variable.visuals == 3 && ${config.allowSuitOff ? "1" : "0"}) ? 1 : 0;`
     ];
 
     if (isNano) {
         preAnimation.push(
-            "variable.nano_state = query.property('suit:toggle_anim_suit');",
+            `variable.nano_state = (variable.visuals == 4) ? 1 : 0;`,
             "variable.nano_timer = math.clamp((variable.nano_timer ?? 0) + (variable.nano_state ? query.delta_time * 12 : -query.delta_time * 12), 0, 7.9);",
             "variable.nano_tex_index = math.floor(variable.nano_timer);"
         );
