@@ -466,9 +466,13 @@ function generateAttachable(config) {
         textures["default"] = `textures/entity/suits/templates/suits/${suitId}`;
     }
 
-    // New logic: Read the single integer property and convert to variables
+    // --- INDEPENDENT LOGIC CORE ---
+    // This allows Mask/Hood/Hide to run on one property and Nano to run on another.
     let preAnimation = [
         "variable.visuals = query.property('suit:visuals');",
+        "variable.nano_state = query.property('suit:nano_state');", 
+        
+        // Map visual states (mutually exclusive)
         `variable.mask = (variable.visuals == 1 && ${config.allowMask ? "1" : "0"}) ? 1 : 0;`,
         `variable.hood = (variable.visuals == 2 && ${config.allowHood ? "1" : "0"}) ? 1 : 0;`,
         `variable.hidden = (variable.visuals == 3 && ${config.allowSuitOff ? "1" : "0"}) ? 1 : 0;`
@@ -476,7 +480,7 @@ function generateAttachable(config) {
 
     if (isNano) {
         preAnimation.push(
-            `variable.nano_state = (variable.visuals == 4) ? 1 : 0;`,
+            // Nano Logic: Only reacts to the nano_state property
             "variable.nano_timer = math.clamp((variable.nano_timer ?? 0) + (variable.nano_state ? query.delta_time * 12 : -query.delta_time * 12), 0, 7.9);",
             "variable.nano_tex_index = math.floor(variable.nano_timer);"
         );
