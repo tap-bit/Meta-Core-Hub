@@ -18,7 +18,7 @@ const DATA = {
     ]
 };
 
-const colors = ["red", "blue", "yellow", "orange", "green", "purple", "pink", "white", "black", "cyan"];
+const colors = ["red", "blue", "yellow", "orange", "green", "purple", "pink", "white", "black"];
 const auraColors = ["Red", "Blue", "Yellow", "Orange", "Green", "Purple", "Pink", "White", "Black"];
 const hexMap = { Red: "#ff4444", Blue: "#4444ff", Yellow: "#ffff44", Orange: "#ffaa00", Green: "#44ff44", Purple: "#aa44ff", Pink: "#ff88ff", White: "#ffffff", Black: "#555555" };
 
