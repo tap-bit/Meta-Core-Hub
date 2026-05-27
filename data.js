@@ -38,8 +38,8 @@ const DATA = {
             tips: "Speed trails only appear if the player's speed level is 8 or above."
         },
         { 
-            id: "ability:size_manipulator",
-            name: "Size Manipulator",
+            id: "ability:size_manipulation",
+            name: "Size Manipulation",
             desc: "Alter your physical dimensions to become a giant or microscopic.",
             scaling: { scale_multiplier: "0.1x to 10x" },
             type: "movement"
