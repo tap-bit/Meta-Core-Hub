@@ -51,10 +51,20 @@ function renderExplorer(tab) {
         
         keys.forEach(key => { if (item[key]) extra += buildSection(key.replace('_', ' '), item[key]); });
 
+        // Grab the item ID no matter how it's named in your DATA file
+        const inGameId = item.id || item.item_id || item.itemId || (item.ids ? item.ids[0] : null);
+
+        // Create a highly visible badge for the Item ID if it exists
+        const idBadge = inGameId 
+            ? `<div class="tag" style="margin-bottom: 8px; display: inline-block; background: rgba(255, 255, 255, 0.1); border: 1px dashed #ccc; padding: 4px 8px;"><strong>Item ID:</strong> <code>${inGameId}</code></div>` 
+            : "";
+
         const card = document.createElement("div");
         card.className = "card";
         card.style.animationDelay = `${index * 0.05}s`;
-        card.innerHTML = `<div class="name">${item.name}</div><div class="desc">${item.desc}</div>${extra}`;
+        
+        // Inject the ID badge right between the name and the description
+        card.innerHTML = `<div class="name">${item.name}</div>${idBadge}<div class="desc">${item.desc}</div>${extra}`;
         container.appendChild(card);
     });
 }
