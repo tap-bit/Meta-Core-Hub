@@ -1,5 +1,5 @@
 const DATA = {
-    abilities: [
+    items: [
         { name: "Super Strength", desc: "Increases melee damage massively.", scaling: { damage: "base * (level / 10)", knockback: "level * 0.2" }, visuals: { aura: "red", particles: "impact_shockwave" }, tags: ["passive", "combat"] },
         { name: "Super Speed", desc: "Move at extreme speeds.", scaling: { speed: "base + (level * 0.5)" }, visuals: { trailColor: "yellow", lightning: true }, tags: ["movement"] },
         { name: "Web Swing", desc: "Swing using web physics.", mechanics: { range: 40, velocity: 2 }, tags: ["movement"] }
