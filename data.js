@@ -321,16 +321,16 @@ const DATA = {
         }
     ],
     ores: [
-        { name: "Titanium Ore", desc: "High-tier crafting material.", spawn: { dimension: "overworld", y: "-40 to 20", rarity: "uncommon" }, drops: ["titanium_ingot"] },
-        { name: "Kryptonite", desc: "Radioactive mineral from crashed meteors.", spawn: { structure: "Kryptonite Meteor", rarity: "rare" }, drops: ["kryptonite"] },
-        { name: "Blue Kryptonite", desc: "A unique isotopic variation of kryptonite.", spawn: { structure: "Blue Kryptonite Meteor", rarity: "very rare" }, drops: ["blue kryptonite"] }
+        { id: "ore:titanium", name: "Titanium Ore", desc: "High-tier crafting material.", spawn: { dimension: "overworld", y: "-40 to 20", rarity: "uncommon" }, drops: ["titanium_ingot"] },
+        { id: "ore:kryptonite", name: "Kryptonite", desc: "Radioactive mineral from crashed meteors.", spawn: { structure: "Kryptonite Meteor", rarity: "rare" }, drops: ["kryptonite"] },
+        { id: "ore:blue_kryptonite", name: "Blue Kryptonite", desc: "A unique isotopic variation of kryptonite.", spawn: { structure: "Blue Kryptonite Meteor", rarity: "very rare" }, drops: ["blue kryptonite"] }
     ],
     structures: [
-        { name: "Kryptonite Meteor", desc: "A fallen radioactive rock from space.", spawn: { dimension: "overworld", biome: "plains" }, contains: ["kryptonite"] },
-        { name: "Blue Kryptonite Meteor", desc: "A rare variant of fallen space debris.", spawn: { dimension: "overworld", biome: "plains" }, contains: ["blue kryptonite"] }
+        { id: "structure:kryptonite_meteor", name: "Kryptonite Meteor", desc: "A fallen radioactive rock from space.", spawn: { dimension: "overworld", biome: "plains" }, contains: ["kryptonite"] },
+        { id: "structure:blue_kryptonite_meteor", name: "Blue Kryptonite Meteor", desc: "A rare variant of fallen space debris.", spawn: { dimension: "overworld", biome: "plains" }, contains: ["blue kryptonite"] }
     ],
     entities: [
-        { name: "Radioactive Spider", desc: "A glowing arachnid with mutating venom.", spawn: { biome: "forest", light_level: "low" }, drops: ["radioactive dna"] }
+        { id: "entity:radioactive_spider", name: "Radioactive Spider", desc: "A glowing arachnid with mutating venom.", spawn: { biome: "forest", light_level: "low" }, drops: ["radioactive dna"] }
     ]
 };
 
