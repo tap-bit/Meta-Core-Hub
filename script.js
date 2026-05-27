@@ -16,11 +16,21 @@ function switchTab(tab, el) {
 function buildSection(title, data) {
     if (!data) return "";
     let html = `<div class="section-title">${title}</div><div class="tags-container">`;
+    
     if (Array.isArray(data)) {
         data.forEach(val => { html += `<div class="tag">${val}</div>`; });
+    } else if (typeof data === 'object' && data !== null) {
+        Object.entries(data).forEach(([k, v]) => {
+            if (Array.isArray(v)) {
+                html += `<div class="tag"><strong>${k}:</strong> ${v.join(', ')}</div>`;
+            } else {
+                html += `<div class="tag"><strong>${k}:</strong> ${v}</div>`;
+            }
+        });
     } else {
-        Object.entries(data).forEach(([k, v]) => { html += `<div class="tag"><strong>${k}:</strong> ${v}</div>`; });
+        html += `<div class="tag">${data}</div>`;
     }
+    
     html += `</div><br>`;
     return html;
 }
@@ -32,7 +42,13 @@ function renderExplorer(tab) {
 
     DATA[tab].forEach((item, index) => {
         let extra = "";
-        const keys = ["scaling", "mechanics", "visuals", "spawn", "contains", "drops", "abilities", "tags", "biome", "dimension", "light_level"];
+        
+        const keys = [
+            "scaling", "mechanics", "visuals", "variants", "ids", 
+            "magazine_id", "spawn", "contains", "drops", "abilities", 
+            "tags", "biome", "dimension", "light_level"
+        ];
+        
         keys.forEach(key => { if (item[key]) extra += buildSection(key.replace('_', ' '), item[key]); });
 
         const card = document.createElement("div");
