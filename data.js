@@ -1,8 +1,81 @@
+// 1. Core definitions must come first so DATA can read them
+const colors = ["red", "blue", "yellow", "orange", "green", "purple", "pink", "white", "black"];
+const auraColors = ["Red", "Blue", "Yellow", "Orange", "Green", "Purple", "Pink", "White", "Black"];
+const hexMap = { Red: "#ff4444", Blue: "#4444ff", Yellow: "#ffff44", Orange: "#ffaa00", Green: "#44ff44", Purple: "#aa44ff", Pink: "#ff88ff", White: "#ffffff", Black: "#555555" };
+
+// 2. The main data library
 const DATA = {
     items: [
-        { name: "Super Strength", desc: "Increases melee damage massively.", scaling: { damage: "base * (level / 10)", knockback: "level * 0.2" }, visuals: { aura: "red", particles: "impact_shockwave" }, tags: ["passive", "combat"] },
-        { name: "Super Speed", desc: "Move at extreme speeds.", scaling: { speed: "base + (level * 0.5)" }, visuals: { trailColor: "yellow", lightning: true }, tags: ["movement"] },
-        { name: "Web Swing", desc: "Swing using web physics.", mechanics: { range: 40, velocity: 2 }, tags: ["movement"] }
+        { 
+            name: "Super Strength", 
+            desc: "Increases melee damage massively.", 
+            scaling: { damage: "base * (level / 10)", knockback: "level * 0.2" }, 
+            visuals: { aura: "red", particles: "impact_shockwave" }, 
+            tags: ["passive", "combat"] 
+        },
+        { 
+            name: "Super Speed", 
+            desc: "Move at extreme speeds.", 
+            scaling: { speed: "base + (level * 0.5)" }, 
+            visuals: { trailColor: "yellow", lightning: true }, 
+            tags: ["movement"] 
+        },
+        { 
+            name: "Web Swing", 
+            desc: "Swing using web physics.", 
+            mechanics: { range: 40, velocity: 2 }, 
+            tags: ["movement"] 
+        },
+        {
+            name: "Heat Vision",
+            desc: "Fires intense energy laser beams from your eyes.",
+            scaling: { damage: "level * 1.5", range: "30" },
+            visuals: { 
+                colors: colors, 
+                particles: "heat_vision_laser" 
+            },
+            tags: ["active", "combat", "ranged"]
+        },
+        {
+            name: "Energy Beam",
+            desc: "Discharges a continuous concussive energy blast from your hands.",
+            scaling: { damage: "level * 1.2" },
+            visuals: { 
+                colors: colors, 
+                particles: "energy_beam_blast" 
+            },
+            tags: ["active", "combat"]
+        },
+        {
+            name: "Chest Energy Beam",
+            desc: "Fires a massive beam of energy directly from the suit's chest core.",
+            scaling: { damage: "level * 2.5", cooldown: "20s" },
+            visuals: { 
+                colors: colors, 
+                particles: "unibeam_shockwave" 
+            },
+            tags: ["active", "combat", "heavy"]
+        },
+        {
+            name: "Forcefield",
+            desc: "Deploys an energy barrier that blocks incoming projectiles and damage.",
+            scaling: { radius: "3 + (level * 0.5)", durability: "level * 50" },
+            visuals: { 
+                colors: colors, 
+                particles: "shield_bubble" 
+            },
+            tags: ["active", "defense"]
+        },
+        {
+            name: "Lightning Beam",
+            desc: "Channels concentrated Speed Force electrical currents into a forward strike.",
+            scaling: { damage: "level * 1.8", shock_duration: "3s" },
+            visuals: { 
+                colors: colors, 
+                particles: "speed_lightning_strike" 
+            },
+            tags: ["active", "combat", "speedforce"]
+        }
     ],
     ores: [
         { name: "Titanium Ore", desc: "High-tier crafting material.", spawn: { dimension: "overworld", y: "-40 to 20", rarity: "uncommon" }, drops: ["titanium_ingot"] },
@@ -18,10 +91,7 @@ const DATA = {
     ]
 };
 
-const colors = ["red", "blue", "yellow", "orange", "green", "purple", "pink", "white", "black"];
-const auraColors = ["Red", "Blue", "Yellow", "Orange", "Green", "Purple", "Pink", "White", "Black"];
-const hexMap = { Red: "#ff4444", Blue: "#4444ff", Yellow: "#ffff44", Orange: "#ffaa00", Green: "#44ff44", Purple: "#aa44ff", Pink: "#ff88ff", White: "#ffffff", Black: "#555555" };
-
+// 3. Backend Power Registry
 const REGISTRY_ABILITIES = [
     { name: "Area Teleport", id: "ability:area_teleport", type: "item_tag", color: true, icon: "portal" },
     { name: "Chest Energy Beam", id: "ability:chest_energy_beam_<color>", type: "item_only", color: true, icon: "chest_energy_beam" },
