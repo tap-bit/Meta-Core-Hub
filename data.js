@@ -321,16 +321,67 @@ const DATA = {
         }
     ],
     ores: [
-        { id: "ore:titanium", name: "Titanium Ore", desc: "High-tier crafting material.", spawn: { dimension: "overworld", y: "-40 to 20", rarity: "uncommon" }, drops: ["titanium_ingot"] },
-        { id: "ore:kryptonite", name: "Kryptonite", desc: "Radioactive mineral from crashed meteors.", spawn: { structure: "Kryptonite Meteor", rarity: "rare" }, drops: ["kryptonite"] },
-        { id: "ore:blue_kryptonite", name: "Blue Kryptonite", desc: "A unique isotopic variation of kryptonite.", spawn: { structure: "Blue Kryptonite Meteor", rarity: "very rare" }, drops: ["blue kryptonite"] }
+        { 
+            id: "ore:taptanium", 
+            name: "Taptanium Ore", 
+            desc: "A versatile underground mineral.", 
+            spawn: { dimension: "overworld", y: "-60 to 50", rarity: "common" }, 
+            drops: ["taptanium_shard"] 
+        },
+        { 
+            id: "ore:titanium", 
+            name: "Titanium Ore", 
+            desc: "Main crafting material found underground.", 
+            spawn: { dimension: "overworld", y: "-60 to 50", rarity: "common" }, 
+            drops: ["titanium_ingot"] 
+        },
+        { 
+            id: "ore:vibranium", 
+            name: "Vibranium Ore", 
+            desc: "A powerful, rare ore found specifically in savanna biomes.", 
+            spawn: { dimension: "overworld", biome: "savanna", y: "-60 to 150", rarity: "rare" }, 
+            drops: ["vibranium_fragment"] 
+        },
+        { 
+            id: "ore:kryptonite", 
+            name: "Kryptonite", 
+            desc: "Radioactive mineral found in fallen meteors.", 
+            spawn: { structure: "Kryptonite Meteor", rarity: "very rare" }, 
+            drops: ["kryptonite"] 
+        },
+        { 
+            id: "ore:blue_kryptonite", 
+            name: "Blue Kryptonite", 
+            desc: "A unique, highly unstable isotopic variation.", 
+            spawn: { structure: "Blue Kryptonite Meteor", rarity: "very rare" }, 
+            drops: ["blue_kryptonite"] 
+        }
     ],
     structures: [
-        { id: "structure:kryptonite_meteor", name: "Kryptonite Meteor", desc: "A fallen radioactive rock from space.", spawn: { dimension: "overworld", biome: "plains" }, contains: ["kryptonite"] },
-        { id: "structure:blue_kryptonite_meteor", name: "Blue Kryptonite Meteor", desc: "A rare variant of fallen space debris.", spawn: { dimension: "overworld", biome: "plains" }, contains: ["blue kryptonite"] }
+        { 
+            id: "structure:science_lab", 
+            name: "Science Lab", 
+            desc: "High-tech facility generating in open plains.", 
+            spawn: { dimension: "overworld", biome: "plains" }, 
+            contains: ["experimental_data", "advanced_components"] 
+        },
+        { 
+            id: "structure:kryptonite_meteor", 
+            name: "Kryptonite Meteor", 
+            desc: "A fallen radioactive rock from space.", 
+            spawn: { dimension: "overworld", biome: "any" }, 
+            contains: ["kryptonite"] 
+        },
+        { 
+            id: "structure:blue_kryptonite_meteor", 
+            name: "Blue Kryptonite Meteor", 
+            desc: "A rare variant of fallen space debris.", 
+            spawn: { dimension: "overworld", biome: "any" }, 
+            contains: ["blue_kryptonite"] 
+        }
     ],
     entities: [
-        { id: "entity:radioactive_spider", name: "Radioactive Spider", desc: "A glowing arachnid with mutating venom.", spawn: { biome: "forest", light_level: "low" }, drops: ["radioactive dna"] }
+        { id: "entity:radioactive_spider", name: "Radioactive Spider", desc: "A glowing arachnid with mutating venom.", spawn: { biome: "forest", light_level: "low" }, drops: ["Radioactive DNA"] }
     ]
 };
 
