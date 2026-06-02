@@ -1,10 +1,6 @@
-const colors = ["blue", "pink", "yellow", "green", "purple", "orange", "red", "black", "silver"];
-
-const hexMap = {
-    "blue": "#00e5ff", "pink": "#ff66cc", "yellow": "#ffff33", 
-    "green": "#33cc33", "purple": "#9933ff", "orange": "#ff9900", 
-    "red": "#ff3333", "black": "#1a1a1a", "silver": "#cccccc"
-};
+const colors = ["red", "blue", "yellow", "orange", "green", "purple", "pink", "white", "black"];
+const auraColors = ["Red", "Blue", "Yellow", "Orange", "Green", "Purple", "Pink", "White", "Black"];
+const hexMap = { Red: "#ff4444", Blue: "#4444ff", Yellow: "#ffff44", Orange: "#ffaa00", Green: "#44ff44", Purple: "#aa44ff", Pink: "#ff88ff", White: "#ffffff", Black: "#555555" };
 
 const DATA = {
     items: [
@@ -390,177 +386,37 @@ const DATA = {
 };
 
 const REGISTRY_ABILITIES = [
-    {
-        id: "super_strength",
-        name: "Super Strength",
-        type: "standard",
-        inputType: "number",
-        prefix: "ability:",
-        hasScale: true,
-        defaultScale: 8
-    },
-    {
-        id: "energy_beam",
-        name: "Energy Beam Blast",
-        type: "standard",
-        inputType: "number",
-        prefix: "ability:",
-        hasScale: true,
-        defaultScale: 9
-    },
-    {
-        id: "flight_mechanics",
-        name: "Flight & Navigation Model",
-        type: "select",
-        options: [
-            { label: "No Flight", value: "none" },
-            { 
-                label: "Flight (When Suit On)", 
-                value: "flight_when_suit_on", 
-                powerTags: ["ability:flight_when_suit_on_8"],
-                item: { name: "Flight", itemId: "ability:flight", icon: "flight" }
-            },
-            { 
-                label: "Standard Unrestricted Flight", 
-                value: "flight_standard", 
-                powerTags: ["ability:flight_standard_1"],
-                item: { name: "Flight", itemId: "ability:flight", icon: "flight" }
-            }
-        ]
-    },
-    {
-        id: "energy_bomb_variants",
-        name: "Energy Bomb Configurations",
-        type: "select",
-        options: [
-            { label: "No Energy Bomb Installed", value: "none" },
-            ...colors.map(color => ({
-                label: `${color.toUpperCase()} Energy Bomb Mode`,
-                value: `bomb_${color}`,
-                powerTags: ["ability:energy_bomb_10", `ability:energy_bomb_${color}`],
-                item: { name: "Energy Bomb", itemId: "ability:energy_bomb", icon: "energy_bomb" }
-            }))
-        ]
-    },
-    {
-        id: "arm_cannon_variants",
-        name: "Arm Cannon Weapon Modules",
-        type: "select",
-        options: [
-            { label: "No Heavy Weapons Mounted", value: "none" },
-            ...colors.map(color => ({
-                label: `${color.toUpperCase()} Beetle Arm Cannon`,
-                value: `cannon_${color}`,
-                powerTags: [],
-                item: { name: "Arm Cannon", itemId: `weapon:${color}_beetle_arm_cannon`, icon: "arm_cannon" }
-            }))
-        ]
-    },
-    {
-        id: "forcefield_variants",
-        name: "Defensive Forcefield Systems",
-        type: "select",
-        options: [
-            { label: "No Shield Generative Matrix", value: "none" },
-            ...colors.map(color => ({
-                label: `${color.toUpperCase()} Holographic Shield`,
-                value: `shield_${color}`,
-                powerTags: [],
-                item: { name: "Forcefield", itemId: `ability:forcefield_${color}`, icon: "forcefield" }
-            }))
-        ]
-    },
-    {
-        id: "nanotech_configurations",
-        name: "Nanotech Infrastructure Protocol",
-        type: "select",
-        options: [
-            { label: "No Active Micro-Infrastructures", value: "none" },
-            { label: "Offense Mode Level 1", value: "off_1", powerTags: ["nano:offense_1"] },
-            { label: "Offense Mode Level 2", value: "off_2", powerTags: ["nano:offense_2"] },
-            { label: "Offense Mode Level 3", value: "off_3", powerTags: ["nano:offense_3"] },
-            { label: "Offense Mode Level 4", value: "off_4", powerTags: ["nano:offense_4"] },
-            { label: "Offense Mode Level 5", value: "off_5", powerTags: ["nano:offense_5"] },
-            { label: "Offense Mode Level 6", value: "off_6", powerTags: ["nano:offense_6"] },
-            { label: "Offense Mode Level 7", value: "off_7", powerTags: ["nano:offense_7"] },
-            { label: "Offense Mode Level 8", value: "off_8", powerTags: ["nano:offense_8"] },
-            { label: "Offense Mode Level 9", value: "off_9", powerTags: ["nano:offense_9"] }
-        ]
-    },
-    {
-        id: "spider_webbing_variants",
-        name: "Tactical Web-Dispenser Modules",
-        type: "select",
-        options: [
-            { label: "No Web Dispenser Mechanisms", value: "none" },
-            { 
-                label: "Natural Alien Symbiote Dispenser", 
-                value: "symbiote_web", 
-                powerTags: ["web:white_to_black", "web:increased"],
-                item: { name: "Web Shooter", itemId: "weapon:natural_web_shooter", icon: "web_shooter" }
-            },
-            { 
-                label: "Mechanical Cartridge Web Shooter", 
-                value: "classic_web", 
-                powerTags: [],
-                item: { name: "Web Shooter", itemId: "weapon:web_shooter", icon: "web_shooter" }
-            }
-        ]
-    },
-    {
-        id: "spider_mobility",
-        name: "Spider Traversal Frameworks",
-        type: "multiselect",
-        options: [
-            { label: "Web Swing Framework", value: "swing", powerTags: [], item: { name: "Web Swing", itemId: "ability:web_swing", icon: "web_swing" } },
-            { label: "Web Spin Trappable Strands", value: "spin", powerTags: [], item: { name: "Web Spin", itemId: "ability:web_spin", icon: "web_spin" } }
-        ]
-    },
-    {
-        id: "damage_mitigation",
-        name: "Structural Defensive Scaling",
-        type: "select",
-        options: [
-            { label: "Standard Baseline Kinetic Absorption", value: "none" },
-            { label: "Heavy Armored Matrix (85% Mitigation)", value: "85", powerTags: ["dmg_reduction:percent_85"] },
-            { label: "Symbiotic Flexible Adaptation (83% Mitigation)", value: "83", powerTags: ["dmg_reduction:percent_83"] },
-            { label: "Standard Reinforced Fabric (79% Mitigation)", value: "79", powerTags: ["dmg_reduction:percent_79"] }
-        ]
-    },
-    {
-        id: "environmental_immunities",
-        name: "Environmental Hazard Countermeasures",
-        type: "multiselect",
-        options: [
-            { label: "Poison Biological Cleanse", value: "poison", powerTags: ["immune:poison"] },
-            { label: "Wither Decay Shielding", value: "wither", powerTags: ["immune:wither"] },
-            { label: "Lightning Overcharge Grounding", value: "lightning", powerTags: ["immune:lightning"] },
-            { label: "Lava Extreme Thermal Immunity", value: "lava", powerTags: ["immune:lava"] },
-            { label: "Fall Kinetic Dispersion Matrix", value: "fall", powerTags: ["immune:fall"] }
-        ]
-    },
-    {
-        id: "tactical_maneuvers",
-        name: "Tactical Response Frameworks",
-        type: "multiselect",
-        options: [
-            { label: "Passive Dodge System (Lvl 1)", value: "dodge_1", powerTags: ["ability:passive_dodge_1"] },
-            { label: "Passive Dodge System (Lvl 3)", value: "dodge_3", powerTags: ["ability:passive_dodge_3"] },
-            { label: "Passive Dodge System (Lvl 5)", value: "dodge_5", powerTags: ["ability:passive_dodge_5"] },
-            { label: "Reactive Blocking Shielding (Lvl 5)", value: "blocking_5", powerTags: ["ability:blocking_5"] }
-        ]
-    },
-    {
-        id: "suit_visuals_common",
-        name: "Visual Utility Controls",
-        type: "multiselect",
-        options: [
-            { label: "Register Visual Override Toggle Item", value: "visual_item", powerTags: [], item: { name: "Suit Visuals Item", itemId: "suit:visuals_item", icon: "visual_item" } }
-        ]
-    }
+    { name: "Area Teleport", id: "ability:area_teleport", type: "item_tag", color: true, icon: "portal" },
+    { name: "Chest Energy Beam", id: "ability:chest_energy_beam_<color>", type: "item_only", color: true, icon: "chest_energy_beam" },
+    { name: "Double Energy Beam", id: "ability:double_energy_beam_<color>", type: "item_only", color: true, icon: "double_energy_beam" },
+    { name: "Energy Beam", id: "ability:energy_beam_<color>", type: "item_only", color: true, icon: "energy_beam" },
+    { name: "Energy Bomb", id: "ability:energy_bomb", type: "item_tag", scale: true, color: true, icon: "energy_bomb" },
+    { name: "Extra Life", id: "ability:extra_life", type: "tag_only", scale: true },
+    { name: "Fire Breath", id: "ability:fire_breath", type: "item_tag", scale: true, icon: "fire_breath" },
+    { name: "Flight", id: "ability:flight", type: "item_tag", scale: true, icon: "flight" },
+    { name: "Forcefield", id: "ability:forcefield_<color>", type: "item_only", color: true, icon: "forcefield" },
+    { name: "Frostbite Wave", id: "ability:frostbite_wave", type: "item_only", icon: "frostbite_wave" },
+    { name: "Gravity Flip", id: "ability:gravity_flip", type: "item_only", icon: "gravity_flip" },
+    { name: "Ground Smash", id: "ability:ground_smash", type: "item_tag", scale: true, icon: "ground_smash" },
+    { name: "Head Energy Beam", id: "ability:head_energy_beam_<color>", type: "item_only", color: true, icon: "head_energy_beam" },
+    { name: "Healing Aura", id: "ability:healing_aura", type: "item_only", icon: "healing_aura" },
+    { name: "Heat Vision", id: "ability:heat_vision", type: "item_tag", scale: true, color: true, icon: "heat_vision" },
+    { name: "Ice Breath", id: "ability:ice_breath", type: "item_tag", scale: true, icon: "ice_breath" },
+    { name: "Kinetic Pulse", id: "ability:kinetic_pulse", type: "item_only", icon: "kinetic_pulse" },
+    { name: "Lightning Beam", id: "ability:lightning_beam_<color>", type: "item_only", color: true, icon: "lightning_beam" },
+    { name: "Lightning Strike", id: "ability:lightning_strike", type: "item_only", icon: "lightning_strike" },
+    { name: "Phase", id: "ability:phase", type: "item_only", icon: "phase" },
+    { name: "Photo Healing", id: "ability:photo_healing", type: "tag_only" },
+    { name: "Power Blast", id: "ability:power_blast", type: "item_tag", scale: true, color: true, icon: "power_blast" },
+    { name: "Prism Shot", id: "ability:prism_shot", type: "item_tag", scale: true, color: true, icon: "prism_shot" },
+    { name: "Rocket Slam", id: "ability:rocket_slam", type: "item_tag", scale: true, icon: "rocket_slam" },
+    { name: "Super Speed", id: "ability:super_speed", type: "item_tag", scale: true, color: true, icon: "super_speed" },
+    { name: "Super Strength", id: "ability:super_strength", type: "tag_only", scale: true },
+    { name: "Telekinesis", id: "ability:telekinesis", type: "item_only", icon: "telekinesis" },
+    { name: "Thunderclap", id: "ability:thunderclap", type: "item_tag", scale: true, icon: "thunderclap" },
+    { name: "Undying", id: "ability:undying", type: "tag_only" },
+    { name: "Mask Off", id: "animation.suit.mask_off", type: "item_only", icon: "mask_off" },
+    { name: "Hood Down", id: "animation.suit.hood_down", type: "item_only", icon: "hood_down" },
+    { name: "Suit Off", id: "animation.suit.suit_off", type: "item_only", icon: "suit_off" },
+    { name: "Nano Toggle", id: "ability:toggle_anim_suit", type: "item_only", icon: "toggle_anim_suit" }
 ];
-
-window.DATA = DATA;
-window.REGISTRY_ABILITIES = REGISTRY_ABILITIES;
-window.hexMap = hexMap;
-window.colors = colors;
