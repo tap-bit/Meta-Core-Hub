@@ -1,7 +1,8 @@
 let activeTab = "items";
 
 document.addEventListener("DOMContentLoaded", () => {
-    const defaultTabEl = document.querySelector(`.tab[onclick*="switchTab('items'"]`) || document.querySelector(".tab");
+    // Initial load
+    const defaultTabEl = document.querySelector(`.tab[onclick*="switchTab('items'"]`);
     switchTab("items", defaultTabEl);
     initRegistryEngine();
 });
@@ -10,12 +11,14 @@ function switchTab(tabId, element) {
     if (!element) return;
     activeTab = tabId;
     
+    // UI state management
     document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
     document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
     
     element.classList.add("active");
     
-    if (tabId === "items" || tabId === "suits") {
+    // Router: handle explorers vs utilities
+    if (["items", "ores", "structures", "entities"].includes(tabId)) {
         document.getElementById("explorer-view").classList.add("active");
         renderExplorer(tabId);
     } else {
@@ -29,45 +32,76 @@ function renderExplorer(type) {
     if (!container) return;
     container.innerHTML = "";
     
-    if (type === "items") {
-        if (!window.DATA || !DATA.items) return;
-        DATA.items.forEach(item => {
-            const card = document.createElement("div");
-            card.className = "section";
-            card.style.borderLeft = "4px solid var(--accent, #00ffcc)";
-            
-            let badging = Array.isArray(item.type) ? item.type.join(" | ") : item.type;
-            
-            card.innerHTML = `
-                <div class="section-title" style="margin-bottom: 4px;">${item.name}</div>
-                <div style="font-size: 0.8rem; color: #00ffcc; text-transform: uppercase; margin-bottom: 12px; font-family: 'JetBrains Mono';">${badging}</div>
-                <p style="margin: 0 0 12px 0; color: #a0aec0; font-size: 0.9rem; line-height: 1.5;">${item.desc}</p>
-                <div style="font-size: 0.75rem; color: #718096; font-family: 'JetBrains Mono';">ID: ${item.id}</div>
-            `;
-            container.appendChild(card);
-        });
-    } else {
-        if (!window.DATA || !DATA.ores) return;
-        DATA.ores.forEach(ore => {
-            const card = document.createElement("div");
-            card.className = "section";
-            card.style.borderLeft = "4px solid #ff0055";
-            card.innerHTML = `
-                <div class="section-title" style="margin-bottom: 4px;">${ore.name}</div>
-                <div style="font-size: 0.8rem; color: #ff0055; text-transform: uppercase; margin-bottom: 12px; font-family: 'JetBrains Mono';">Ore Node</div>
-                <p style="margin: 0 0 12px 0; color: #a0aec0; font-size: 0.9rem;">${ore.desc}</p>
-                <div style="font-size: 0.75rem; color: #718096; font-family: 'JetBrains Mono';">Drops: ${(ore.drops || []).join(", ")}</div>
-            `;
-            container.appendChild(card);
-        });
+    if (!window.DATA) return;
+
+    // Route rendering based on type
+    switch(type) {
+        case "items":
+            renderItems(container, DATA.items || []);
+            break;
+        case "ores":
+            renderOres(container, DATA.ores || []);
+            break;
+        case "structures":
+            renderGeneric(container, DATA.structures || [], "Structure Node", "#ffcc00");
+            break;
+        case "entities":
+            renderGeneric(container, DATA.entities || [], "Entity Registry", "#00ccff");
+            break;
     }
 }
+
+function renderItems(container, items) {
+    items.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "section";
+        card.style.borderLeft = "4px solid var(--accent, #00ffcc)";
+        let badging = Array.isArray(item.type) ? item.type.join(" | ") : item.type;
+        card.innerHTML = `
+            <div class="section-title" style="margin-bottom: 4px;">${item.name}</div>
+            <div style="font-size: 0.8rem; color: #00ffcc; text-transform: uppercase; margin-bottom: 12px; font-family: 'JetBrains Mono';">${badging}</div>
+            <p style="margin: 0 0 12px 0; color: #a0aec0; font-size: 0.9rem; line-height: 1.5;">${item.desc}</p>
+            <div style="font-size: 0.75rem; color: #718096; font-family: 'JetBrains Mono';">ID: ${item.id}</div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function renderOres(container, ores) {
+    ores.forEach(ore => {
+        const card = document.createElement("div");
+        card.className = "section";
+        card.style.borderLeft = "4px solid #ff0055";
+        card.innerHTML = `
+            <div class="section-title" style="margin-bottom: 4px;">${ore.name}</div>
+            <div style="font-size: 0.8rem; color: #ff0055; text-transform: uppercase; margin-bottom: 12px; font-family: 'JetBrains Mono';">Ore Node</div>
+            <p style="margin: 0 0 12px 0; color: #a0aec0; font-size: 0.9rem;">${ore.desc}</p>
+            <div style="font-size: 0.75rem; color: #718096; font-family: 'JetBrains Mono';">Drops: ${(ore.drops || []).join(", ")}</div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function renderGeneric(container, list, label, color) {
+    list.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "section";
+        card.style.borderLeft = `4px solid ${color}`;
+        card.innerHTML = `
+            <div class="section-title" style="margin-bottom: 4px;">${item.name}</div>
+            <div style="font-size: 0.8rem; color: ${color}; text-transform: uppercase; margin-bottom: 12px; font-family: 'JetBrains Mono';">${label}</div>
+            <p style="margin: 0 0 12px 0; color: #a0aec0; font-size: 0.9rem;">${item.desc}</p>
+        `;
+        container.appendChild(card);
+    });
+}
+
+// --- Registry Engine Logic ---
 
 function initRegistryEngine() {
     const auraBox = document.getElementById("auraContainer");
     if (auraBox && window.auraColors) {
         auraBox.innerHTML = "";
-        
         auraColors.forEach(color => {
             const hex = (window.hexMap && hexMap[color]) || "#ffffff";
             const label = document.createElement("label");
@@ -79,7 +113,6 @@ function initRegistryEngine() {
             `;
             auraBox.appendChild(label);
         });
-        
         const defaultAura = document.createElement("label");
         defaultAura.className = "opt";
         defaultAura.innerHTML = `<input type="radio" name="reg-aura" value="none" checked> Nullified Aura Field`;
@@ -90,14 +123,6 @@ function initRegistryEngine() {
     if (!abilitiesBox || !window.REGISTRY_ABILITIES) return;
     
     abilitiesBox.innerHTML = "";
-    abilitiesBox.style.display = "flex";
-    abilitiesBox.style.flexDirection = "column";
-    abilitiesBox.style.gap = "16px";
-    abilitiesBox.style.maxHeight = "none";
-    abilitiesBox.style.background = "transparent";
-    abilitiesBox.style.border = "none";
-    abilitiesBox.style.padding = "0";
-
     REGISTRY_ABILITIES.forEach(ab => {
         const fieldWrapper = document.createElement("div");
         fieldWrapper.className = "input-group";
@@ -118,82 +143,50 @@ function initRegistryEngine() {
             row.style.display = "flex";
             row.style.alignItems = "center";
             row.style.gap = "14px";
-            
-            let scaleInputHtml = "";
-            if (ab.hasScale) {
-                scaleInputHtml = `
-                    <div style="display: flex; align-items: center; gap: 6px;">
-                        <span style="font-size:0.8rem; color:#718096; font-family:'JetBrains Mono';">MAGNITUDE:</span>
-                        <input type="number" class="ab-scale" value="${ab.defaultScale}" style="width: 60px; padding: 6px; text-align: center;">
-                    </div>
-                `;
-            }
-            
             row.innerHTML = `
                 <label class="opt" style="flex: 1;">
-                    <input type="checkbox" class="ab-trigger" data-id="${ab.id}" data-type="standard" data-prefix="${ab.prefix || ''}"> Activate Capabilities
+                    <input type="checkbox" class="ab-trigger" data-id="${ab.id}" data-type="standard" data-prefix="${ab.prefix || ''}"> Activate
                 </label>
-                ${scaleInputHtml}
+                ${ab.hasScale ? `<div style="display: flex; align-items: center; gap: 6px;"><span style="font-size:0.8rem; color:#718096; font-family:'JetBrains Mono';">MAG:</span><input type="number" class="ab-scale" value="${ab.defaultScale}" style="width: 60px; padding: 6px; text-align: center;"></div>` : ''}
             `;
             fieldWrapper.appendChild(row);
-        } 
-        else if (ab.type === "select" && ab.options) {
+        } else if (ab.type === "select") {
             const select = document.createElement("select");
             select.className = "ab-select-node";
             select.setAttribute("data-id", ab.id);
-            select.setAttribute("data-type", "select");
             select.style.width = "100%";
-            select.style.padding = "10px";
-            select.style.background = "var(--bg-main)";
-            select.style.border = "1px solid var(--border-color)";
-            select.style.color = "var(--text-primary)";
-            select.style.fontFamily = "'JetBrains Mono'";
-            select.style.borderRadius = "4px";
-
             ab.options.forEach(opt => {
                 const o = document.createElement("option");
-                o.value = opt.value;
-                o.textContent = opt.label;
+                o.value = opt.value; o.textContent = opt.label;
                 select.appendChild(o);
             });
             fieldWrapper.appendChild(select);
-        } 
-        else if (ab.type === "multiselect" && ab.options) {
+        } else if (ab.type === "multiselect") {
             const subGrid = document.createElement("div");
             subGrid.style.display = "grid";
             subGrid.style.gridTemplateColumns = "1fr 1fr";
             subGrid.style.gap = "8px";
-            subGrid.setAttribute("data-id", ab.id);
             subGrid.setAttribute("data-type", "multiselect");
-
+            subGrid.setAttribute("data-id", ab.id);
             ab.options.forEach(opt => {
                 const lbl = document.createElement("label");
                 lbl.className = "opt";
-                lbl.innerHTML = `
-                    <input type="checkbox" class="ab-multi-opt" value="${opt.value}"> ${opt.label}
-                `;
+                lbl.innerHTML = `<input type="checkbox" class="ab-multi-opt" value="${opt.value}"> ${opt.label}`;
                 subGrid.appendChild(lbl);
             });
             fieldWrapper.appendChild(subGrid);
         }
-
         abilitiesBox.appendChild(fieldWrapper);
     });
 }
 
 function addEffectRow() {
     const container = document.getElementById("effectContainer");
-    if (!container) return;
     const row = document.createElement("div");
     row.style.display = "flex";
     row.style.gap = "10px";
     row.style.marginBottom = "10px";
-    
-    row.innerHTML = `
-        <input type="text" placeholder="minecraft:speed" style="flex: 2;" class="eff-id">
-        <input type="number" placeholder="Amp" style="flex: 1;" class="eff-amp" value="1">
-        <button class="btn-add" style="background: #ff0055; margin: 0; padding: 0 12px; width: auto; color: white;" onclick="this.parentElement.remove()">X</button>
-    `;
+    row.innerHTML = `<input type="text" placeholder="minecraft:speed" style="flex: 2;" class="eff-id"><input type="number" placeholder="Amp" style="flex: 1;" class="eff-amp" value="1"><button class="btn-add" style="background: #ff0055; margin:0; padding:0 12px;" onclick="this.parentElement.remove()">X</button>`;
     container.appendChild(row);
 }
 
