@@ -1,318 +1,360 @@
-function switchTab(tab, el) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    el.classList.add('active');
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+let activeTab = "abilities";
 
-    if (tab === 'fabricator') {
-        document.getElementById('fabricator-view').classList.add('active');
-    } else if (tab === 'registry') {
-        document.getElementById('registry-view').classList.add('active');
+document.addEventListener("DOMContentLoaded", () => {
+    switchTab("abilities", document.querySelector(".tab"));
+    initRegistryEngine();
+});
+
+function switchTab(tabId, element) {
+    activeTab = tabId;
+    
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+    
+    element.classList.add("active");
+    
+    if (tabId === "abilities" || tabId === "suits") {
+        document.getElementById("explorer-view").classList.add("active");
+        renderExplorer(tabId);
     } else {
-        document.getElementById('explorer-view').classList.add('active');
-        renderExplorer(tab);
+        document.getElementById(`${tabId}-view`).classList.add("active");
     }
 }
 
-function buildSection(title, data) {
-    if (!data) return "";
-    let html = `<div class="section-title">${title}</div><div class="tags-container">`;
-    
-    if (Array.isArray(data)) {
-        data.forEach(val => { html += `<div class="tag">${val}</div>`; });
-    } else if (typeof data === 'object' && data !== null) {
-        Object.entries(data).forEach(([k, v]) => {
-            if (Array.isArray(v)) {
-                html += `<div class="tag"><strong>${k}:</strong> ${v.join(', ')}</div>`;
-            } else {
-                html += `<div class="tag"><strong>${k}:</strong> ${v}</div>`;
-            }
-        });
-    } else {
-        html += `<div class="tag">${data}</div>`;
-    }
-    
-    html += `</div><br>`;
-    return html;
-}
-
-function renderExplorer(tab) {
+function renderExplorer(type) {
     const container = document.getElementById("content");
     container.innerHTML = "";
-    if (!DATA[tab]) return;
-
-    DATA[tab].forEach((item, index) => {
-        let extra = "";
-        const keys = [
-            "scaling", "mechanics", "visuals", "variants", "ids", 
-            "magazine_id", "spawn", "contains", "drops", "abilities", 
-            "tags", "biome", "dimension", "light_level"
-        ];
-        
-        keys.forEach(key => { if (item[key]) extra += buildSection(key.replace('_', ' '), item[key]); });
-
-        const inGameId = item.id || item.item_id || item.itemId || (item.ids ? item.ids[0] : null);
-        const idBadge = inGameId 
-            ? `<div class="tag" style="margin-bottom: 8px; display: inline-block; background: rgba(255, 255, 255, 0.1); border: 1px dashed #ccc; padding: 4px 8px;"><strong>Item ID:</strong> <code>${inGameId}</code></div>` 
-            : "";
-
-        const card = document.createElement("div");
-        card.className = "card";
-        card.style.animationDelay = `${index * 0.05}s`;
-        
-        card.innerHTML = `<div class="name">${item.name}</div>${idBadge}<div class="desc">${item.desc}</div>${extra}`;
-        container.appendChild(card);
-    });
-}
-
-function generateAttachable(config) {
-    const suitId = config.id;
-    const isNano = config.isNano;
-    let textures = { "enchanted": "textures/misc/enchanted_item_glint" };
     
-    if (isNano) {
-        for (let i = 0; i <= 7; i++) { 
-            textures[`nano_${i}`] = `textures/entity/suits/templates/suits/example_nano/${suitId}_${i}`; 
-        }
+    if (type === "abilities") {
+        DATA.items.forEach(item => {
+            const card = document.createElement("div");
+            card.className = "section";
+            card.style.borderLeft = "4px solid var(--accent, #00ffcc)";
+            
+            let badging = Array.isArray(item.type) ? item.type.join(" | ") : item.type;
+            
+            card.innerHTML = `
+                <div class="section-title" style="margin-bottom: 4px;">${item.name}</div>
+                <div style="font-size: 0.8rem; color: #00ffcc; text-transform: uppercase; margin-bottom: 12px; font-family: 'JetBrains Mono';">${badging}</div>
+                <p style="margin: 0 0 12px 0; color: #a0aec0; font-size: 0.9rem; line-height: 1.5;">${item.desc}</p>
+                <div style="font-size: 0.75rem; color: #718096; font-family: 'JetBrains Mono';">ID: ${item.id}</div>
+            `;
+            container.appendChild(card);
+        });
     } else {
-        textures["default"] = `textures/entity/suits/templates/suits/${suitId}`;
+        DATA.ores.forEach(ore => {
+            const card = document.createElement("div");
+            card.className = "section";
+            card.style.borderLeft = "4px solid #ff0055";
+            card.innerHTML = `
+                <div class="section-title" style="margin-bottom: 4px;">${ore.name}</div>
+                <div style="font-size: 0.8rem; color: #ff0055; text-transform: uppercase; margin-bottom: 12px; font-family: 'JetBrains Mono';">Ore Node</div>
+                <p style="margin: 0 0 12px 0; color: #a0aec0; font-size: 0.9rem;">${ore.desc}</p>
+                <div style="font-size: 0.75rem; color: #718096; font-family: 'JetBrains Mono';">Drops: ${ore.drops.join(", ")}</div>
+            `;
+            container.appendChild(card);
+        });
     }
-
-    let preAnimation = [
-        "variable.visuals = query.property('suit:visuals');",
-        "variable.nano_state = query.property('suit:nano_state');", 
-        
-        `variable.mask = (variable.visuals == 1 && ${config.allowMask ? "1" : "0"}) ? 1 : 0;`,
-        `variable.hood = (variable.visuals == 2 && ${config.allowHood ? "1" : "0"}) ? 1 : 0;`,
-        `variable.hidden = (variable.visuals == 3 && ${config.allowSuitOff ? "1" : "0"}) ? 1 : 0;`
-    ];
-
-    if (isNano) {
-        preAnimation.push(
-            "variable.nano_timer = math.clamp((variable.nano_timer ?? 0) + (variable.nano_state ? query.delta_time * 12 : -query.delta_time * 12), 0, 7.9);",
-            "variable.nano_tex_index = math.floor(variable.nano_timer);"
-        );
-    }
-
-    const json = {
-        "format_version": "1.21.0",
-        "minecraft:attachable": {
-            "description": {
-                "identifier": `suit:${suitId}`,
-                "materials": { "default": "entity_emissive_alpha", "enchanted": "armor_enchanted" },
-                "textures": textures,
-                "geometry": { "default": `geometry.${suitId}` },
-                "animations": {
-                    "suit_logic": `controller.animation.${suitId}`,
-                    "mask_off": "animation.suit.mask_off",
-                    "hood_down": "animation.suit.hood_down",
-                    "suit_off": "animation.suit.suit_off",
-                    "cape": "animation.suit.cape"
-                },
-                "scripts": {
-                    "pre_animation": preAnimation,
-                    "animate": [
-                        "suit_logic",
-                        config.hasCape ? { "cape": "variable.last_g = (query.is_on_ground ? query.life_time : (variable.last_g ?? query.life_time)); return query.modified_move_speed > 0.01 && (query.life_time - variable.last_g < 0.6 || !query.is_sprinting);" } : null
-                    ].filter(Boolean)
-                },
-                "render_controllers": [isNano ? "controller.render.nano_suit_template" : "controller.render.suit_template"]
-            }
-        }
-    };
-    return JSON.stringify(json, null, 2);
 }
 
-function downloadFiles() {
-    const suitName = document.getElementById('fab-suitId').value || 'template_suit';
-    const config = {
-        id: suitName,
-        isNano: document.getElementById('isNano').checked,
-        hasCape: document.getElementById('hasCape').checked,
-        allowMask: document.getElementById('allowMask').checked,
-        allowHood: document.getElementById('allowHood').checked,
-        allowSuitOff: document.getElementById('allowSuitOff').checked
-    };
-
-    const blob = new Blob([generateAttachable(config)], { type: "application/json" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = `${suitName}.json`;
-    link.click();
-}
-
-function initRegistryUI() {
-    const abContainer = document.getElementById('abilitiesContainer');
-    abContainer.innerHTML = "";
-
-    REGISTRY_ABILITIES.forEach((ab, i) => {
-        let controlMarkup = "";
-
-        if (ab.type === 'standard') {
-            controlMarkup = `
-                <div class="ability-card" id="card_${i}">
-                    <label class="ability-header">
-                        <input type="checkbox" id="ab_check_${i}" onchange="document.getElementById('card_${i}').classList.toggle('active', this.checked)">
-                        <span>${ab.name}</span>
-                    </label>
-                    <div class="ability-controls">
-                        ${ab.hasScale ? `<input type="number" id="ab_scale_${i}" placeholder="Scale" value="${ab.defaultScale}" style="width: 100%; padding: 8px;">` : ''}
-                    </div>
-                </div>`;
-        } else if (ab.type === 'select') {
-            controlMarkup = `
-                <div class="ability-card active" id="card_${i}">
-                    <label class="ability-header">
-                        <span>${ab.name}</span>
-                    </label>
-                    <div style="padding: 0 10px;">
-                        <select id="ab_select_${i}" style="width: 100%; padding: 8px;" onchange="this.value !== 'none' ? document.getElementById('card_${i}').classList.add('active') : document.getElementById('card_${i}').classList.remove('active')">
-                            ${ab.options.map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('')}
-                        </select>
-                    </div>
-                </div>`;
-        } else if (ab.type === 'multiselect') {
-            controlMarkup = `
-                <div class="ability-card" id="card_${i}">
-                    <label class="ability-header" style="margin-bottom: 4px;">
-                        <span>${ab.name}</span>
-                    </label>
-                    <div class="options-grid" style="grid-template-columns: 1fr; gap: 6px; padding: 0 10px;">
-                        ${ab.options.map((opt, subIdx) => `
-                            <label class="opt" style="padding: 6px 12px; font-size: 0.8rem;">
-                                <input type="checkbox" class="ab_sub_check_${i}" value="${opt.value}" data-parent="${i}" data-subindex="${subIdx}" onchange="this.closest('.ability-card').classList.add('active')">
-                                ${opt.label}
-                            </label>
-                        `).join('')}
-                    </div>
-                </div>`;
-        }
-
-        abContainer.innerHTML += controlMarkup;
+function initRegistryEngine() {
+    const auraBox = document.getElementById("auraContainer");
+    auraBox.innerHTML = "";
+    
+    auraColors.forEach(color => {
+        const hex = hexMap[color] || "#ffffff";
+        const label = document.createElement("label");
+        label.className = "opt";
+        label.style.marginBottom = "6px";
+        label.innerHTML = `
+            <input type="radio" name="reg-aura" value="${color.toLowerCase()}"> 
+            <span style="color: ${hex}; font-weight: bold;">■</span> ${color} Matrix Channel
+        `;
+        auraBox.appendChild(label);
     });
+    
+    const defaultAura = document.createElement("label");
+    defaultAura.className = "opt";
+    defaultAura.innerHTML = `<input type="radio" name="reg-aura" value="none" checked> Nullified Aura Field`;
+    auraBox.appendChild(defaultAura);
 
-    const auraContainer = document.getElementById('auraContainer');
-    auraContainer.innerHTML = `
-        <div class="input-group">
-            <div class="options-grid">
-                ${auraColors.map(color => `
-                    <label class="opt" style="color:${hexMap[color]}">
-                        <input type="checkbox" class="aura-check" value="${color}">
-                        <span style="display:flex; align-items:center; gap:8px;">
-                            <span class="aura-indicator" style="background-color:${hexMap[color]}"></span>
-                            ${color}
-                        </span>
-                    </label>
-                `).join('')}
-            </div>
-        </div>
-    `;
+    const abilitiesBox = document.getElementById("abilitiesContainer");
+    abilitiesBox.innerHTML = "";
+    abilitiesBox.style.display = "flex";
+    abilitiesBox.style.flexDirection = "column";
+    abilitiesBox.style.gap = "16px";
+    abilitiesBox.style.maxHeight = "none";
+    abilitiesBox.style.background = "transparent";
+    abilitiesBox.style.border = "none";
+    abilitiesBox.style.padding = "0";
+
+    REGISTRY_ABILITIES.forEach(ab => {
+        const fieldWrapper = document.createElement("div");
+        fieldWrapper.className = "input-group";
+        fieldWrapper.style.padding = "14px";
+        fieldWrapper.style.background = "var(--bg-input)";
+        fieldWrapper.style.border = "1px solid var(--border-color)";
+        fieldWrapper.style.borderRadius = "6px";
+
+        const title = document.createElement("label");
+        title.style.color = "var(--accent)";
+        title.style.marginBottom = "8px";
+        title.style.display = "block";
+        title.textContent = ab.name;
+        fieldWrapper.appendChild(title);
+
+        if (ab.type === "standard") {
+            const row = document.createElement("div");
+            row.style.display = "flex";
+            row.style.alignItems = "center";
+            row.style.gap = "14px";
+            
+            let scaleInputHtml = "";
+            if (ab.hasScale) {
+                scaleInputHtml = `
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <span style="font-size:0.8rem; color:#718096; font-family:'JetBrains Mono';">MAGNITUDE:</span>
+                        <input type="number" class="ab-scale" value="${ab.defaultScale}" style="width: 60px; padding: 6px; text-align: center;">
+                    </div>
+                `;
+            }
+            
+            row.innerHTML = `
+                <label class="opt" style="flex: 1;">
+                    <input type="checkbox" class="ab-trigger" data-id="${ab.id}" data-type="standard" data-prefix="${ab.prefix || ''}"> Activate Capabilities
+                </label>
+                ${scaleInputHtml}
+            `;
+            fieldWrapper.appendChild(row);
+        } 
+        else if (ab.type === "select") {
+            const select = document.createElement("select");
+            select.className = "ab-select-node";
+            select.setAttribute("data-id", ab.id);
+            select.setAttribute("data-type", "select");
+            select.style.width = "100%";
+            select.style.padding = "10px";
+            select.style.background = "var(--bg-main)";
+            select.style.border = "1px solid var(--border-color)";
+            select.style.color = "var(--text-primary)";
+            select.style.fontFamily = "'JetBrains Mono'";
+            select.style.borderRadius = "4px";
+
+            ab.options.forEach(opt => {
+                const o = document.createElement("option");
+                o.value = opt.value;
+                o.textContent = opt.label;
+                select.appendChild(o);
+            });
+            fieldWrapper.appendChild(select);
+        } 
+        else if (ab.type === "multiselect") {
+            const subGrid = document.createElement("div");
+            subGrid.style.display = "grid";
+            subGrid.style.gridTemplateColumns = "1fr 1fr";
+            subGrid.style.gap = "8px";
+            subGrid.setAttribute("data-id", ab.id);
+            subGrid.setAttribute("data-type", "multiselect");
+
+            ab.options.forEach(opt => {
+                const lbl = document.createElement("label");
+                lbl.className = "opt";
+                lbl.innerHTML = `
+                    <input type="checkbox" class="ab-multi-opt" value="${opt.value}"> ${opt.label}
+                `;
+                subGrid.appendChild(lbl);
+            });
+            fieldWrapper.appendChild(subGrid);
+        }
+
+        abilitiesBox.appendChild(fieldWrapper);
+    });
 }
 
 function addEffectRow() {
-    const div = document.createElement('div');
-    div.className = 'dynamic-row';
-    div.innerHTML = `<input type="text" placeholder="minecraft:effect_id" class="eff-id" style="flex:2; padding: 8px;"> <input type="number" value="1" placeholder="Lvl" class="eff-lv" style="flex:1; padding: 8px;"> <button class="btn-del" onclick="this.parentElement.remove()">X</button>`;
-    document.getElementById('effectContainer').appendChild(div);
+    const container = document.getElementById("effectContainer");
+    const row = document.createElement("div");
+    row.style.display = "flex";
+    row.style.gap = "10px";
+    row.style.marginBottom = "10px";
+    
+    row.innerHTML = `
+        <input type="text" placeholder="minecraft:speed" style="flex: 2;" class="eff-id">
+        <input type="number" placeholder="Amp" style="flex: 1;" class="eff-amp" value="1">
+        <button class="btn-add" style="background: #ff0055; margin: 0; padding: 0 12px; width: auto; color: white;" onclick="this.parentElement.remove()">X</button>
+    `;
+    container.appendChild(row);
 }
 
 function generateRegistry() {
-    const suitId = document.getElementById('reg-suitId').value;
+    const suitId = document.getElementById("reg-suitId").value || "custom_hero";
+    const itemNamespace = document.getElementById("suitItem").value;
+    const hoverStyle = parseInt(document.getElementById("hoverStyle").value) || 0;
+    const boostStyle = parseInt(document.getElementById("boostStyle").value) || 0;
+    const masterTag = document.getElementById("masterTag").value;
+    const dnaTag = document.getElementById("dnaTag").value;
     
-    const hoverVal = parseInt(document.getElementById('hoverStyle').value);
-    const boostVal = parseInt(document.getElementById('boostStyle').value);
-
-    const res = {
-        suitItem: document.getElementById('suitItem').value
-    };
-
-    if (!isNaN(hoverVal)) res.hoverStyle = hoverVal;
-    if (!isNaN(boostVal)) res.boostStyle = boostVal;
-
-    res.tag = document.getElementById('masterTag').value;
-    res.dnaTag = document.getElementById('dnaTag').value;
-    res.powerTags = [];
-    res.effects = [];
-    res.abilities = [];
-    res.auras = [];
-
-    if (document.getElementById('useInjections').checked) {
-        res.injectionItem = document.getElementById('injItem').value;
-        res.emptyItem = document.getElementById('emptyItem').value;
+    const computedTags = [];
+    if (masterTag) computedTags.push(masterTag);
+    if (dnaTag) computedTags.push(dnaTag);
+    
+    const customTagsRaw = document.getElementById("customTags").value;
+    if (customTagsRaw) {
+        customTagsRaw.split(",").forEach(t => {
+            const clean = t.trim();
+            if (clean) computedTags.push(clean);
+        });
     }
 
-    document.querySelectorAll('#effectContainer .dynamic-row').forEach(row => {
-        const id = row.querySelector('.eff-id').value;
-        if (id) res.effects.push({ id: id, level: parseInt(row.querySelector('.eff-lv').value) });
-    });
+    const injectionEnabled = document.getElementById("useInjections").checked;
+    const injectionSystem = {
+        enabled: injectionEnabled,
+        vector_item: injectionEnabled ? document.getElementById("injItem").value : "",
+        empty_housing: injectionEnabled ? document.getElementById("emptyItem").value : ""
+    };
 
-    REGISTRY_ABILITIES.forEach((ab, i) => {
-        if (ab.type === 'standard') {
-            if (!document.getElementById(`ab_check_${i}`).checked) return;
-            const scaleEl = document.getElementById(`ab_scale_${i}`);
-            const lv = scaleEl ? scaleEl.value : null;
-            
-            // Fixed formatting logic: explicitly keeps requested namespace structures intact
-            const outputTag = lv ? `${ab.prefix}${ab.id.replace('ability:', '')}_${lv}` : `${ab.prefix}${ab.id.replace('ability:', '')}`;
-            res.powerTags.push(outputTag);
-
-        } else if (ab.type === 'select') {
-            const selectEl = document.getElementById(`ab_select_${i}`);
-            const selectedVal = selectEl.value;
-            if (selectedVal === 'none') return;
-
-            const selectedOption = ab.options.find(opt => opt.value === selectedVal);
-            if (selectedOption) {
-                if (selectedOption.powerTags) {
-                    selectedOption.powerTags.forEach(t => res.powerTags.push(t));
-                }
-                if (selectedOption.item) {
-                    res.abilities.push({
-                        name: selectedOption.item.name,
-                        itemId: selectedOption.item.itemId,
-                        icon: `textures/items/${selectedOption.item.icon.includes('/') ? selectedOption.item.icon : 'abilities/' + selectedOption.item.icon}`
-                    });
-                }
-            }
-        } else if (ab.type === 'multiselect') {
-            const checkedBoxes = document.querySelectorAll(`.ab_sub_check_${i}:checked`);
-            checkedBoxes.forEach(box => {
-                const subIndex = parseInt(box.getAttribute('data-subindex'));
-                const opt = ab.options[subIndex];
-                if (opt) {
-                    if (opt.powerTags) opt.powerTags.forEach(t => res.powerTags.push(t));
-                    if (opt.item) {
-                        res.abilities.push({
-                            name: opt.item.name,
-                            itemId: opt.item.itemId,
-                            icon: `textures/items/${opt.item.icon.includes('/') ? opt.item.icon : 'abilities/' + opt.item.icon}`
-                        });
-                    }
-                }
-            });
+    const passiveEffects = [];
+    document.querySelectorAll("#effectContainer > div").forEach(row => {
+        const id = row.querySelector(".eff-id").value.trim();
+        const amp = parseInt(row.querySelector(".eff-amp").value) || 1;
+        if (id) {
+            passiveEffects.push({ effect: id, amplifier: amp });
         }
     });
 
-    const custom = document.getElementById('customTags').value;
-    if (custom) custom.split(',').forEach(t => { if (t.trim()) res.powerTags.push(t.trim()) });
+    const activeAura = document.querySelector('input[name="reg-aura"]:checked').value;
+    
+    const runtimeAbilitiesList = [];
 
-    const selectedAuras = Array.from(document.querySelectorAll('.aura-check:checked')).map(el => el.value);
-    selectedAuras.forEach((color, index) => {
-        res.auras.push({
-            name: `${color} Lightning Aura`,
-            value: index + 1,
-            icon: `textures/entity/lightning/lightning_${color.toLowerCase()}`
+    document.querySelectorAll("#abilitiesContainer .ab-trigger").forEach(cb => {
+        if (cb.checked) {
+            const id = cb.getAttribute("data-id");
+            const prefix = cb.getAttribute("data-prefix");
+            const parent = cb.closest(".input-group");
+            const scaleInput = parent.querySelector(".ab-scale");
+            
+            if (scaleInput) {
+                computedTags.push(`${prefix}${id}_${scaleInput.value}`);
+            } else {
+                computedTags.push(`${prefix}${id}`);
+            }
+            
+            const nativeItem = DATA.items.find(i => i.id === `${prefix}${id}`);
+            if (nativeItem) runtimeAbilitiesList.push(nativeItem.id);
+        }
+    });
+
+    document.querySelectorAll("#abilitiesContainer .ab-select-node").forEach(sel => {
+        const abId = sel.getAttribute("data-id");
+        const val = sel.value;
+        if (val === "none") return;
+
+        const spec = REGISTRY_ABILITIES.find(a => a.id === abId);
+        if (!spec) return;
+
+        const optData = spec.options.find(o => o.value === val);
+        if (optData) {
+            if (optData.powerTags) {
+                optData.powerTags.forEach(t => computedTags.push(t));
+            }
+            if (optData.item && optData.item.itemId) {
+                runtimeAbilitiesList.push(optData.item.itemId);
+            }
+        }
+    });
+
+    document.querySelectorAll("#abilitiesContainer [data-type='multiselect']").forEach(container => {
+        const abId = container.getAttribute("data-id");
+        const spec = REGISTRY_ABILITIES.find(a => a.id === abId);
+        if (!spec) return;
+
+        container.querySelectorAll(".ab-multi-opt").forEach(cb => {
+            if (cb.checked) {
+                const optData = spec.options.find(o => o.value === cb.value);
+                if (optData) {
+                    if (optData.powerTags) {
+                        optData.powerTags.forEach(t => computedTags.push(t));
+                    }
+                    if (optData.item && optData.item.itemId) {
+                        runtimeAbilitiesList.push(optData.item.itemId);
+                    }
+                }
+            }
         });
     });
 
-    // Code formatter to keep data outputs matching your heropack registry structures perfectly
-    let json = JSON.stringify(res, null, 4);
-    json = json.replace(/\{\s+"name": "(.*?)",\s+"itemId": "(.*?)",\s+"icon": "(.*?)"\s+\}/g, '{ name: "$1", itemId: "$2", icon: "$3" }');
-    json = json.replace(/\{\s+"name": "(.*?)",\s+"value": (\d+),\s+"icon": "(.*?)"\s+\}/g, '{ name: "$1", value: $2, icon: "$3" }');
-    json = json.replace(/\{\s+"id": "(.*?)",\s+"level": (\d+)\s+\}/g, '{ id: "$1", level: $2 }');
+    const outputNode = {
+        format_version: "1.4.0",
+        [`meta_core:suit_${suitId}`]: {
+            registry: {
+                identifier: suitId,
+                item: itemNamespace,
+                properties: {
+                    hover_index: hoverStyle,
+                    boost_index: boostStyle
+                },
+                tags: computedTags
+            },
+            injection_system: injectionSystem,
+            passive_effects: passiveEffects,
+            aura_matrix: {
+                active_aura: activeAura
+            },
+            runtime_abilities: [...new Set(runtimeAbilitiesList)]
+        }
+    };
 
-    document.getElementById('output').textContent = `"${suitId}": ${json},`;
+    document.getElementById("output").textContent = JSON.stringify(outputNode, null, 4);
 }
 
-renderExplorer("abilities");
-initRegistryUI();
-addEffectRow();
+function downloadFiles() {
+    const fabId = document.getElementById("fab-suitId").value || "custom_suit";
+    
+    const attachableJson = {
+        format_version: "1.10.0",
+        "minecraft:attachable": {
+            description: {
+                identifier: `meta_core:${fabId}_attachable`,
+                materials: {
+                    default: "entity_alphatest",
+                    enchanted: "entity_alphatest_glint"
+                },
+                textures: {
+                    default: `textures/models/meta_core/${fabId}`,
+                    enchanted: "textures/misc/enchanted_item_glint"
+                },
+                geometry: {
+                    default: `geometry.meta_core.${fabId}`
+                },
+                scripts: {
+                    initialize: [
+                        `v.is_nano = ${document.getElementById("isNano").checked ? 1.0 : 0.0};`,
+                        `v.render_cape = ${document.getElementById("hasCape").checked ? 1.0 : 0.0};`
+                    ],
+                    animate: [
+                        "base_controller"
+                    ]
+                },
+                animations: {
+                    base_controller: "controller.animation.meta_core.attachable_root"
+                },
+                render_controllers: [
+                    "controller.render.item_default"
+                ],
+                query_overrides: {
+                    allow_mask: document.getElementById("allowMask").checked,
+                    allow_hood: document.getElementById("allowHood").checked,
+                    allow_depower: document.getElementById("allowSuitOff").checked
+                }
+            }
+        }
+    };
+
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(attachableJson, null, 4));
+    const dlAnchor = document.createElement("a");
+    dlAnchor.setAttribute("href", dataStr);
+    dlAnchor.setAttribute("download", `${fabId}.attachable.json`);
+    document.body.appendChild(dlAnchor);
+    dlAnchor.click();
+    dlAnchor.remove();
+}
