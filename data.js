@@ -1,10 +1,9 @@
 const colors = ["blue", "pink", "yellow", "green", "purple", "orange", "red", "black", "silver"];
-const auraColors = ["Blue", "Pink", "Yellow", "Green", "Purple", "Orange", "Red", "Black", "Silver"];
 
 const hexMap = {
-    "Blue": "#00e5ff", "Pink": "#ff66cc", "Yellow": "#ffff33", 
-    "Green": "#33cc33", "Purple": "#9933ff", "Orange": "#ff9900", 
-    "Red": "#ff3333", "Black": "#1a1a1a", "Silver": "#cccccc"
+    "blue": "#00e5ff", "pink": "#ff66cc", "yellow": "#ffff33", 
+    "green": "#33cc33", "purple": "#9933ff", "orange": "#ff9900", 
+    "red": "#ff3333", "black": "#1a1a1a", "silver": "#cccccc"
 };
 
 const DATA = {
@@ -395,6 +394,7 @@ const REGISTRY_ABILITIES = [
         id: "super_strength",
         name: "Super Strength",
         type: "standard",
+        inputType: "number",
         prefix: "ability:",
         hasScale: true,
         defaultScale: 8
@@ -403,6 +403,7 @@ const REGISTRY_ABILITIES = [
         id: "energy_beam",
         name: "Energy Beam Blast",
         type: "standard",
+        inputType: "number",
         prefix: "ability:",
         hasScale: true,
         defaultScale: 9
