@@ -559,3 +559,8 @@ const REGISTRY_ABILITIES = [
         ]
     }
 ];
+
+window.DATA = DATA;
+window.REGISTRY_ABILITIES = REGISTRY_ABILITIES;
+window.hexMap = hexMap;
+window.colors = colors;
