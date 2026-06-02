@@ -1,127 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meta Core Architect</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meta Core Hub & Architect</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+
 </head>
 <body>
 
-    <div class="social-links">
-        <a href="#" class="social-btn yt">YouTube</a>
-        <a href="#" class="social-btn mc">Modrinth</a>
-        <a href="#" class="social-btn dc">Discord</a>
+<div class="social-links">
+    <a href="https://youtube.com/@tap42069-l?si=htqQ2LhHs6CbiMb6" target="_blank" class="social-btn yt">YouTube</a>
+    <a href="https://mcpedl.com/meta-core-superhero-addon-add-your-own-suit-into/" target="_blank" class="social-btn mc">MCPEDL</a>
+    <a href="https://discord.gg/Yr7Dbwc5f5" target="_blank" class="social-btn dc">Discord</a>
+</div>
+
+<div class="container">
+    <h1>META CORE <span>HUB</span></h1>
+
+    <div class="tabs">
+        <div class="tab active" onclick="switchTab('items', this)">📖 Items</div>
+        <div class="tab" onclick="switchTab('ores', this)">📖 Ores</div>
+        <div class="tab" onclick="switchTab('structures', this)">📖 Structures</div>
+        <div class="tab" onclick="switchTab('entities', this)">📖 Entities</div>
+        <div class="tab" onclick="switchTab('fabricator', this)">🛠️ Suit Fabricator</div>
+        <div class="tab" onclick="switchTab('registry', this)">🛠️ Power Registry</div>
     </div>
 
-    <div class="container">
-        <h1>Meta Core <span>Architect</span></h1>
+    <div id="explorer-view" class="view active">
+        <div id="content" class="grid"></div>
+    </div>
 
-        <div class="tabs">
-            <div class="tab active" onclick="switchTab('items', this)">Items</div>
-            <div class="tab" onclick="switchTab('ores', this)">Ores</div>
-            <div class="tab" onclick="switchTab('structures', this)">Structures</div>
-            <div class="tab" onclick="switchTab('entities', this)">Entities</div>
-            <div class="tab" onclick="switchTab('fabricator', this)">Attachable Fabricator</div>
-            <div class="tab" onclick="switchTab('registry', this)">Power Registry Engine</div>
-        </div>
-
-        <div id="explorer-view" class="view active">
-            <div id="content" class="grid"></div>
-        </div>
-
-        <div id="fabricator-view" class="view">
-            <div class="section" style="max-width: 600px; margin: auto;">
-                <div class="section-title">Attachable Model Generator</div>
-                <div class="input-group">
-                    <label>Suit Blueprint Identifier</label>
-                    <input type="text" id="fab-suitId" placeholder="e.g., blue_beetle">
-                </div>
-                <div class="options-grid" style="margin-bottom: 24px;">
-                    <label class="opt"><input type="checkbox" id="isNano"> Nano Assembly Tech</label>
-                    <label class="opt"><input type="checkbox" id="hasCape"> Render Back Cape</label>
-                    <label class="opt"><input type="checkbox" id="allowMask"> Allow Mask Toggles</label>
-                    <label class="opt"><input type="checkbox" id="allowHood"> Allow Hood Drops</label>
-                    <label class="opt"><input type="checkbox" id="allowSuitOff"> Allow Armor Depower</label>
-                </div>
-                <button class="btn-primary" onclick="downloadFiles()">Compile & Extract Attachable</button>
+    <div id="fabricator-view" class="view">
+        <div class="section" style="max-width: 600px; margin: 0 auto;">
+            <div class="name">Suit Fabricator</div>
+            <div class="desc">Configure and generate Meta Core attachable JSON files.</div>
+            
+            <div class="input-group">
+                <label>Suit Identifier</label>
+                <input type="text" id="fab-suitId" placeholder="e.g. mark_85" value="template_suit">
             </div>
-        </div>
 
-        <div id="registry-view" class="view">
-            <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 30px; align-items: start;">
-                <div class="section" style="display: flex; flex-direction: column; gap: 16px;">
-                    <div class="section-title">Core Registries Mapping</div>
-                    <div style="display: flex; gap: 12px;">
-                        <div style="flex: 1;">
-                            <label>Pack Hero ID</label>
-                            <input type="text" id="reg-suitId" placeholder="blue_beetle" value="blue_beetle">
-                        </div>
-                        <div style="flex: 1;">
-                            <label>Suit Item Namespace</label>
-                            <input type="text" id="suitItem" placeholder="suit:blue_beetle_suit" value="suit:blue_beetle_suit">
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 12px;">
-                        <div style="flex: 1;">
-                            <label>Hover Style Index</label>
-                            <input type="number" id="hoverStyle" placeholder="e.g., 2" value="2">
-                        </div>
-                        <div style="flex: 1;">
-                            <label>Boost Style Index</label>
-                            <input type="number" id="boostStyle" placeholder="e.g., 2" value="2">
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 12px;">
-                        <div style="flex: 1;">
-                            <label>Master Core Tag</label>
-                            <input type="text" id="masterTag" placeholder="has_blue_beetle_powers" value="has_blue_beetle_powers">
-                        </div>
-                        <div style="flex: 1;">
-                            <label>Biological DNA Tag</label>
-                            <input type="text" id="dnaTag" placeholder="dna:blue_beetle" value="dna:blue_beetle">
-                        </div>
-                    </div>
-                    <div class="options-grid">
-                        <label class="opt"><input type="checkbox" id="useInjections" onchange="document.getElementById('injection-panel').style.display = this.checked ? 'flex' : 'none'"> Biological Injection Vectors</label>
-                    </div>
-                    <div id="injection-panel" style="display: none; gap: 12px;">
-                        <div style="flex: 1;">
-                            <label>Injection Vector Item</label>
-                            <input type="text" id="injItem" placeholder="injection:classic_spiderman_injection">
-                        </div>
-                        <div style="flex: 1;">
-                            <label>Depleted Empty Housing</label>
-                            <input type="text" id="emptyItem" placeholder="injection:empty_injection" value="injection:empty_injection">
-                        </div>
-                    </div>
-                    <div class="section-title" style="margin-top: 10px;">Dynamic Active Effects</div>
-                    <div id="effectContainer"></div>
-                    <button class="btn-add" onclick="addEffectRow()">+ Append Active Status Effect</button>
-                    <div class="section-title" style="margin-top: 10px;">Lightning Aura Systems</div>
-                    <div id="auraContainer"></div>
-                </div>
-
-                <div class="section" style="display: flex; flex-direction: column; gap: 16px;">
-                    <div class="section-title">Power Allocations & Component Groups</div>
-                    <div id="abilitiesContainer"></div>
-                    <div class="input-group" style="margin-top: 10px;">
-                        <label>Manual Override Strings (Comma-Separated)</label>
-                        <input type="text" id="customTags" placeholder="immune:radiation, ability:custom_strike">
-                    </div>
-                    <button class="btn-primary" onclick="generateRegistry()">Compile Registry Node</button>
-                    <div id="output-container">
-                        <div class="section-title" style="margin-top: 20px;">Output Buffer</div>
-                        <button class="copy-btn" onclick="navigator.clipboard.writeText(document.getElementById('output').textContent)">Copy Block</button>
-                        <div id="output">"Compiled metadata will generate here..."</div>
-                    </div>
+            <div class="input-group">
+                <label>Logic & Animation Toggles</label>
+                <div class="options-grid">
+                    <label class="opt"><input type="checkbox" id="isNano"> Nano-Tech</label>
+                    <label class="opt"><input type="checkbox" id="hasCape"> Enable Cape</label>
+                    <label class="opt"><input type="checkbox" id="allowMask" checked> Allow Mask</label>
+                    <label class="opt"><input type="checkbox" id="allowHood" checked> Allow Hood</label>
+                    <label class="opt"><input type="checkbox" id="allowSuitOff" checked> Allow Suit Off</label>
                 </div>
             </div>
+
+            <button class="btn-primary" onclick="downloadFiles()">Generate JSON</button>
         </div>
     </div>
 
-    <script src="data.js"></script>
-    <script src="script.js"></script>
+    <div id="registry-view" class="view">
+        <div class="grid" style="align-items: start;">
+            <div class="section">
+                <div class="section-title">1. Identity</div>
+                <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div><label>Registry Key</label><input type="text" id="reg-suitId" value="hero_name"></div>
+                    <div><label>Suit Item</label><input type="text" id="suitItem" value="suit:hero_suit"></div>
+                    <div><label>Master Tag</label><input type="text" id="masterTag" value="has_hero_powers"></div>
+                    <div><label>DNA Tag</label><input type="text" id="dnaTag" value="dna:hero"></div>
+                </div>
+                
+                <label class="opt" style="margin-top: 20px; width: fit-content;">
+                    <input type="checkbox" id="useInjections" onchange="document.getElementById('injBox').style.display = this.checked ? 'grid':'none'"> 
+                    Enable DNA Injections
+                </label>
+
+                <div id="injBox" class="grid" style="display:none; margin-top:15px; grid-template-columns: 1fr 1fr; gap: 15px; padding-top: 15px; border-top: 1px solid var(--card-border);">
+                    <div><label>Injection Item</label><input type="text" id="injItem" value="injection:hero"></div>
+                    <div><label>Empty Item</label><input type="text" id="emptyItem" value="injection:empty"></div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">2. Effects & Tags</div>
+                <div id="effectContainer"></div>
+                <button class="btn-add" onclick="addEffectRow()">+ Add Potion Effect</button>
+                
+                <div style="margin-top:24px;">
+                    <label>Manual Power Tags (comma separated)</label>
+                    <input type="text" id="customTags" placeholder="sound:step, immune:fire">
+                </div>
+            </div>
+        </div>
+
+        <div class="section" style="margin-top: 24px;">
+            <div class="section-title">3. Item & Ability Selection</div>
+            <div class="ability-grid" id="abilitiesContainer"></div>
+        </div>
+
+        <div class="section" style="margin-top: 24px;">
+            <div class="section-title">4. Lightning Aura Mapping</div>
+            <p class="desc" style="margin-top: -5px; margin-bottom: 15px;">Enter the number the player will input to trigger each aura color. Leave blank to omit.</p>
+            <div class="aura-grid" id="auraContainer"></div>
+        </div>
+
+        <button class="btn-primary" onclick="generateRegistry()">Generate Registry JSON</button>
+
+        <div id="output-container">
+            <button class="copy-btn" onclick="const t=document.getElementById('output').textContent; navigator.clipboard.writeText(t); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+            <div id="output">// Registry JSON will appear here...</div>
+        </div>
+    </div>
+</div>
+
+<script src="data.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
