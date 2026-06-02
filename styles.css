@@ -10,7 +10,6 @@
     --danger: #ff4d4d;
 }
 
-/* --- BASE STYLES & SCROLLBAR --- */
 html { scroll-behavior: smooth; }
 
 ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -28,7 +27,6 @@ html { scroll-behavior: smooth; }
 body {
     font-family: 'Inter', sans-serif;
     background-color: var(--bg-dark);
-    /* Deepened the background to make the cards pop more */
     background-image: 
         radial-gradient(circle at 50% -20%, rgba(0, 229, 255, 0.15) 0%, transparent 60%),
         linear-gradient(rgba(0, 229, 255, 0.04) 1px, transparent 1px),
@@ -42,7 +40,6 @@ body {
 }
 
 .container { 
-    /* CHANGED: Made container wider to fit 5-6 cards */
     max-width: 1700px; 
     width: 95%;
     margin: auto; 
@@ -62,7 +59,6 @@ h1 {
 
 h1 span { color: var(--cyan); }
 
-/* --- TABS --- */
 .tabs {
     display: flex;
     flex-wrap: wrap;
@@ -106,7 +102,6 @@ h1 span { color: var(--cyan); }
     transform: translateY(-3px);
 }
 
-/* --- VIEW CONTROLLERS --- */
 .view { display: none; animation: fadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
 .view.active { display: block; }
 
@@ -115,10 +110,8 @@ h1 span { color: var(--cyan); }
     to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
 }
 
-/* --- CARDS & GRIDS --- */
 .grid {
     display: grid;
-    /* CHANGED: 260px min width allows 5-6 cards to fit perfectly on standard monitors */
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 20px;
 }
@@ -135,7 +128,6 @@ h1 span { color: var(--cyan); }
     box-shadow: 0 8px 20px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.02);
 }
 
-/* UPGRADED: Laser scanning top border */
 .card::before {
     content: ''; 
     position: absolute; 
@@ -169,11 +161,9 @@ h1 span { color: var(--cyan); }
     text-shadow: 0 0 15px var(--cyan-glow);
 }
 
-/* --- EXPLORER TYPOGRAPHY --- */
 .name { 
     font-size: 1.4rem; 
     font-weight: 900; 
-    /* UPGRADED: Cool gradient text for the item names */
     background: linear-gradient(135deg, #ffffff 0%, var(--cyan) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -185,7 +175,6 @@ h1 span { color: var(--cyan); }
 .desc { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 24px; }
 .tags-container { display: flex; flex-wrap: wrap; gap: 8px; }
 
-/* UPGRADED: Tech-chip styling for tags */
 .tag { 
     font-family: 'JetBrains Mono', monospace; 
     background: linear-gradient(90deg, rgba(0, 229, 255, 0.1), transparent); 
@@ -200,7 +189,6 @@ h1 span { color: var(--cyan); }
 }
 .tag strong { color: #ffffff; font-weight: 800; margin-right: 6px; letter-spacing: 0.5px;}
 
-/* --- INPUTS & FORMS --- */
 .input-group { margin-bottom: 20px; }
 label { display: block; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; font-weight: 800; letter-spacing: 1px; }
 
@@ -225,7 +213,6 @@ input:focus, select:focus {
     background: rgba(0, 229, 255, 0.05);
 }
 
-/* --- BUTTONS --- */
 .btn-primary {
     width: 100%; padding: 16px; 
     background: linear-gradient(135deg, var(--cyan) 0%, #008899 100%); 
@@ -247,7 +234,6 @@ input:focus, select:focus {
 .btn-del { background: rgba(255, 77, 77, 0.1); color: var(--danger); border: 1px solid var(--danger); padding: 8px 14px; border-radius: 4px; cursor: pointer; transition: 0.3s; font-weight: 900;}
 .btn-del:hover { background: var(--danger); color: #fff; box-shadow: 0 0 20px rgba(255, 77, 77, 0.6); }
 
-/* --- CHECKBOX OPTIONS --- */
 .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
 .opt {
     background: rgba(0,0,0,0.5); border: 1px solid var(--card-border);
@@ -257,7 +243,6 @@ input:focus, select:focus {
 .opt:hover { background: rgba(0, 229, 255, 0.1); border-color: var(--cyan); transform: translateX(5px); box-shadow: 0 0 15px rgba(0, 229, 255, 0.1); }
 .opt input[type="checkbox"] { margin-right: 12px; accent-color: var(--cyan); width: 18px; height: 18px; cursor: pointer;}
 
-/* --- REGISTRY SPECIFIC --- */
 .ability-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; max-height: 500px; overflow-y: auto; padding-right: 10px; }
 
 .ability-card { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 12px; transition: 0.3s; }
@@ -274,7 +259,6 @@ input:focus, select:focus {
 
 .dynamic-row { display: flex; gap: 12px; margin-bottom: 12px; align-items: center; }
 
-/* --- CODE OUTPUT --- */
 #output-container { position: relative; margin-top: 24px; }
 #output { 
     width: 100%; height: 350px; 
@@ -301,7 +285,6 @@ input:focus, select:focus {
 }
 .copy-btn:hover { background: var(--cyan); color: #000; border-color: var(--cyan); box-shadow: 0 0 25px var(--cyan-glow); transform: scale(1.05); }
 
-/* --- SOCIAL BUTTONS --- */
 .social-links {
     position: fixed;
     top: 24px;
