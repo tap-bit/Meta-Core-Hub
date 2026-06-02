@@ -19,8 +19,10 @@
         <h1>Meta Core <span>Architect</span></h1>
 
         <div class="tabs">
-            <div class="tab active" onclick="switchTab('items', this)">Items Explorer</div>
-            <div class="tab" onclick="switchTab('suits', this)">Suits Explorer</div>
+            <div class="tab active" onclick="switchTab('items', this)">Items</div>
+            <div class="tab" onclick="switchTab('ores', this)">Ores</div>
+            <div class="tab" onclick="switchTab('structures', this)">Structures</div>
+            <div class="tab" onclick="switchTab('entities', this)">Entities</div>
             <div class="tab" onclick="switchTab('fabricator', this)">Attachable Fabricator</div>
             <div class="tab" onclick="switchTab('registry', this)">Power Registry Engine</div>
         </div>
@@ -49,10 +51,8 @@
 
         <div id="registry-view" class="view">
             <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 30px; align-items: start;">
-                
                 <div class="section" style="display: flex; flex-direction: column; gap: 16px;">
                     <div class="section-title">Core Registries Mapping</div>
-                    
                     <div style="display: flex; gap: 12px;">
                         <div style="flex: 1;">
                             <label>Pack Hero ID</label>
@@ -63,7 +63,6 @@
                             <input type="text" id="suitItem" placeholder="suit:blue_beetle_suit" value="suit:blue_beetle_suit">
                         </div>
                     </div>
-
                     <div style="display: flex; gap: 12px;">
                         <div style="flex: 1;">
                             <label>Hover Style Index</label>
@@ -74,7 +73,6 @@
                             <input type="number" id="boostStyle" placeholder="e.g., 2" value="2">
                         </div>
                     </div>
-
                     <div style="display: flex; gap: 12px;">
                         <div style="flex: 1;">
                             <label>Master Core Tag</label>
@@ -85,11 +83,9 @@
                             <input type="text" id="dnaTag" placeholder="dna:blue_beetle" value="dna:blue_beetle">
                         </div>
                     </div>
-
                     <div class="options-grid">
                         <label class="opt"><input type="checkbox" id="useInjections" onchange="document.getElementById('injection-panel').style.display = this.checked ? 'flex' : 'none'"> Biological Injection Vectors</label>
                     </div>
-
                     <div id="injection-panel" style="display: none; gap: 12px;">
                         <div style="flex: 1;">
                             <label>Injection Vector Item</label>
@@ -100,11 +96,9 @@
                             <input type="text" id="emptyItem" placeholder="injection:empty_injection" value="injection:empty_injection">
                         </div>
                     </div>
-
                     <div class="section-title" style="margin-top: 10px;">Dynamic Active Effects</div>
                     <div id="effectContainer"></div>
                     <button class="btn-add" onclick="addEffectRow()">+ Append Active Status Effect</button>
-
                     <div class="section-title" style="margin-top: 10px;">Lightning Aura Systems</div>
                     <div id="auraContainer"></div>
                 </div>
@@ -112,24 +106,19 @@
                 <div class="section" style="display: flex; flex-direction: column; gap: 16px;">
                     <div class="section-title">Power Allocations & Component Groups</div>
                     <div id="abilitiesContainer"></div>
-
                     <div class="input-group" style="margin-top: 10px;">
                         <label>Manual Override Strings (Comma-Separated)</label>
                         <input type="text" id="customTags" placeholder="immune:radiation, ability:custom_strike">
                     </div>
-
                     <button class="btn-primary" onclick="generateRegistry()">Compile Registry Node</button>
-
                     <div id="output-container">
                         <div class="section-title" style="margin-top: 20px;">Output Buffer</div>
                         <button class="copy-btn" onclick="navigator.clipboard.writeText(document.getElementById('output').textContent)">Copy Block</button>
                         <div id="output">"Compiled metadata will generate here..."</div>
                     </div>
                 </div>
-
             </div>
         </div>
-
     </div>
 
     <script src="data.js"></script>
