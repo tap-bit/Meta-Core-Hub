@@ -151,27 +151,59 @@ function downloadFiles() {
 
 function initRegistryUI() {
     const abContainer = document.getElementById('abilitiesContainer');
+    abContainer.innerHTML = ""; // Clear container
+
     REGISTRY_ABILITIES.forEach((ab, i) => {
-        abContainer.innerHTML += `
-            <div class="ability-card" id="card_${i}">
-                <label class="ability-header">
-                    <input type="checkbox" id="ab_check_${i}" onchange="document.getElementById('card_${i}').classList.toggle('active', this.checked)">
-                    <span>${ab.name}</span>
-                </label>
-                ${ab.scale || ab.color ? `
-                <div class="ability-controls">
-                    ${ab.scale ? `<input type="number" id="ab_lv_${i}" placeholder="Scale" value="100" style="width: 40%; padding: 8px;">`:''}
-                    ${ab.color ? `
-                    <select id="ab_col_${i}" style="width: 60%; padding: 8px;">
-                        <option value="" disabled selected>Color</option>
-                        ${colors.map(c=>`<option value="${c}">${c.charAt(0).toUpperCase() + c.slice(1)}</option>`).join('')}
-                    </select>`:''}
-                </div>` : ''}
+        let controlsHtml = "";
+        
+        // Render optional Scale/Color controls if they belong to the main card
+        if (ab.scale || ab.colors) {
+            controlsHtml = `
+            <div class="ability-controls" style="margin-top: 8px;">
+                ${ab.scale ? `<input type="number" id="ab_lv_${i}" placeholder="Scale" value="100" style="width: 40%; padding: 8px;">` : ''}
+                ${ab.colors ? `
+                <select id="ab_col_${i}" style="width: 60%; padding: 8px;">
+                    <option value="" disabled selected>Color</option>
+                    ${colors.map(c => `<option value="${c}">${c.charAt(0).toUpperCase() + c.slice(1)}</option>`).join('')}
+                </select>` : ''}
             </div>`;
+        }
+
+        // Check if this is a Multi-Option Matrix Card (like Energy Beams or Suit Adjustments)
+        if (ab.options && ab.options.length > 0) {
+            let optionsHtml = `<div class="nested-options" style="margin-top: 10px; padding-left: 10px; display: flex; flex-direction: column; gap: 6px;">`;
+            
+            ab.options.forEach((opt, optIndex) => {
+                optionsHtml += `
+                <label class="opt-row" style="display: flex; align-items: center; gap: 8px; font-size: 0.9em; cursor: pointer;">
+                    <input type="${ab.multi ? 'checkbox' : 'radio'}" name="ab_matrix_${i}" class="ab_opt_check_${i}" data-index="${optIndex}">
+                    <span>${opt.label}</span>
+                </label>`;
+            });
+            optionsHtml += `</div>`;
+
+            abContainer.innerHTML += `
+                <div class="ability-card complex-card" id="card_${i}">
+                    <div class="ability-header" style="font-weight: bold; display: flex; align-items: center; gap: 8px;">
+                        <span>${ab.name}</span>
+                    </div>
+                    ${controlsHtml}
+                    ${optionsHtml}
+                </div>`;
+        } else {
+            // Standard Single Ability Card
+            abContainer.innerHTML += `
+                <div class="ability-card" id="card_${i}">
+                    <label class="ability-header" style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" id="ab_check_${i}" onchange="document.getElementById('card_${i}').classList.toggle('active', this.checked)">
+                        <span>${ab.name}</span>
+                    </label>
+                    ${controlsHtml}
+                </div>`;
+        }
     });
 
     const auraContainer = document.getElementById('auraContainer');
-
     auraContainer.innerHTML = `
         <div class="input-group">
             <label>Select Lightning Aura Colors</label>
@@ -186,8 +218,7 @@ function initRegistryUI() {
                     </label>
                 `).join('')}
             </div>
-        </div>
-    `;
+        </div>`;
 }
 
 function addEffectRow() {
@@ -216,25 +247,75 @@ function generateRegistry() {
         if(id) res.effects.push({ id: id, level: parseInt(row.querySelector('.eff-lv').value) });
     });
 
+    // Parse configuration fields from the Registry Items array
     REGISTRY_ABILITIES.forEach((ab, i) => {
-        if(!document.getElementById(`ab_check_${i}`).checked) return;
         const scaleEl = document.getElementById(`ab_lv_${i}`);
         const colEl = document.getElementById(`ab_col_${i}`);
         const lv = scaleEl ? scaleEl.value : null;
-        const col = colEl ? colEl.value : null;
+        const col = (colEl && colEl.value) ? colEl.value : 'red'; // Defaults to red if no color choice is selected
+        const suffix = lv ? `_${lv}` : '';
 
-        if(ab.type !== 'tag_only') {
-            res.abilities.push({ name: ab.name, itemId: ab.id.replace('<color>', col || 'red'), icon: `textures/items/abilities/${ab.icon}` });
+        // Case A: Matrix Style Group Selector Card
+        if (ab.options && ab.options.length > 0) {
+            const selectedOptions = document.querySelectorAll(`.ab_opt_check_${i}:checked`);
+            
+            selectedOptions.forEach(chk => {
+                const optIdx = parseInt(chk.getAttribute('data-index'));
+                const optionData = ab.options[optIdx];
+
+                // Compile executable Action Item
+                if (optionData.itemId) {
+                    const parsedItemId = optionData.itemId.replace('<color>', col);
+                    res.abilities.push({
+                        name: optionData.label,
+                        itemId: parsedItemId,
+                        icon: `textures/items/abilities/${ab.icon}`
+                    });
+                }
+
+                // Compile associated Tracking Tags
+                if (optionData.tags) {
+                    optionData.tags.forEach(t => {
+                        res.powerTags.push(`${t.replace('<color>', col)}${suffix}`);
+                    });
+                } else if (optionData.itemId) {
+                    // Fallback to tracking tags via sanitation if explicit tags array doesn't exist
+                    const cleanTag = optionData.itemId.replace('<color>', col);
+                    res.powerTags.push(`${cleanTag}${suffix}`);
+                }
+            });
+        } 
+        // Case B: Standard Standalone Selection Card
+        else {
+            const mainCheck = document.getElementById(`ab_check_${i}`);
+            if (!mainCheck || !mainCheck.checked) return;
+
+            // Generate Active Items array entries
+            if (ab.items) {
+                ab.items.forEach(itemId => {
+                    const parsedItemId = itemId.replace('<color>', col);
+                    res.abilities.push({
+                        name: ab.name,
+                        itemId: parsedItemId,
+                        icon: `textures/items/abilities/${ab.icon || 'default'}`
+                    });
+                });
+            }
+
+            // Generate Active System Tracking Tags
+            if (ab.tags) {
+                ab.tags.forEach(tagId => {
+                    const parsedTag = tagId.replace('<color>', col);
+                    res.powerTags.push(`${parsedTag}${suffix}`);
+                });
+            }
         }
-        if(col && ab.type === 'item_tag') res.powerTags.push(`${ab.id.replace('_<color>', '')}_${col}`);
-        if(col && ab.type === 'item_tag') res.powerTags.push(`${ab.id.split(':')[1]}_${col}`);
     });
 
     const custom = document.getElementById('customTags').value;
     if(custom) custom.split(',').forEach(t => { if(t.trim()) res.powerTags.push(t.trim()) });
 
-    const selectedAuras = Array.from(document.querySelectorAll('.aura-check:checked'))
-        .map(el => el.value);
+    const selectedAuras = Array.from(document.querySelectorAll('.aura-check:checked')).map(el => el.value);
     
     selectedAuras.forEach((color, index) => {
         res.auras.push({
