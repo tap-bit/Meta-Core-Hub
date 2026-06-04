@@ -391,23 +391,12 @@ const REGISTRY_ABILITIES = [
         name: "Energy Beams",
         icon: "energy_beam",
         colors: true,
-        multi: true, // Allows users to check multiple options inside this single card
+        multi: true, 
         options: [
-            { label: "Standard Beam", itemId: "ability:energy_beam_<color>" },
-            { label: "Chest Beam", itemId: "ability:chest_energy_beam_<color>" },
-            { label: "Double Beam", itemId: "ability:double_energy_beam_<color>" },
-            { label: "Head Beam", itemId: "ability:head_energy_beam_<color>" }
-        ]
-    },
-    {
-        name: "Suit Adjustments",
-        icon: "cosmetics",
-        multi: true, // Allows users to check multiple options inside this single card
-        options: [
-            { label: "Mask Off", itemId: "animation.suit.mask_off" },
-            { label: "Hood Down", itemId: "animation.suit.hood_down" },
-            { label: "Suit Off", itemId: "animation.suit.suit_off" },
-            { label: "Nano Toggle", itemId: "ability:toggle_anim_suit" }
+            { label: "Standard Beam", itemId: "ability:energy_beam_<color>", tags: [] },
+            { label: "Chest Beam", itemId: "ability:chest_energy_beam_<color>", tags: [] },
+            { label: "Double Beam", itemId: "ability:double_energy_beam_<color>", tags: [] },
+            { label: "Head Beam", itemId: "ability:head_energy_beam_<color>", tags: [] }
         ]
     },
 
