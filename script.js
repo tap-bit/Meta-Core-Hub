@@ -226,7 +226,7 @@ function generateRegistry() {
         if(ab.type !== 'tag_only') {
             res.abilities.push({ name: ab.name, itemId: ab.id.replace('<color>', col || 'red'), icon: `textures/items/abilities/${ab.icon}` });
         }
-        if(lv) res.powerTags.push(`${ab.id.includes(':') ? ab.id.split(':')[1].replace('_<color>', '') : ab.id}_${lv}`);
+        if(col && ab.type === 'item_tag') res.powerTags.push(`${ab.id.replace('_<color>', '')}_${col}`);
         if(col && ab.type === 'item_tag') res.powerTags.push(`${ab.id.split(':')[1]}_${col}`);
     });
 
