@@ -386,37 +386,55 @@ const DATA = {
 };
 
 const REGISTRY_ABILITIES = [
-    { name: "Area Teleport", id: "ability:area_teleport", type: "item_tag", color: true, icon: "portal" },
-    { name: "Chest Energy Beam", id: "ability:chest_energy_beam_<color>", type: "item_only", color: true, icon: "chest_energy_beam" },
-    { name: "Double Energy Beam", id: "ability:double_energy_beam_<color>", type: "item_only", color: true, icon: "double_energy_beam" },
-    { name: "Energy Beam", id: "ability:energy_beam_<color>", type: "item_only", color: true, icon: "energy_beam" },
-    { name: "Energy Bomb", id: "ability:energy_bomb", type: "item_tag", scale: true, color: true, icon: "energy_bomb" },
-    { name: "Extra Life", id: "ability:extra_life", type: "tag_only", scale: true },
-    { name: "Fire Breath", id: "ability:fire_breath", type: "item_tag", scale: true, icon: "fire_breath" },
-    { name: "Flight", id: "ability:flight", type: "item_tag", scale: true, icon: "flight" },
-    { name: "Forcefield", id: "ability:forcefield_<color>", type: "item_only", color: true, icon: "forcefield" },
-    { name: "Frostbite Wave", id: "ability:frostbite_wave", type: "item_only", icon: "frostbite_wave" },
-    { name: "Gravity Flip", id: "ability:gravity_flip", type: "item_only", icon: "gravity_flip" },
-    { name: "Ground Smash", id: "ability:ground_smash", type: "item_tag", scale: true, icon: "ground_smash" },
-    { name: "Head Energy Beam", id: "ability:head_energy_beam_<color>", type: "item_only", color: true, icon: "head_energy_beam" },
-    { name: "Healing Aura", id: "ability:healing_aura", type: "item_only", icon: "healing_aura" },
-    { name: "Heat Vision", id: "ability:heat_vision", type: "item_tag", scale: true, color: true, icon: "heat_vision" },
-    { name: "Ice Breath", id: "ability:ice_breath", type: "item_tag", scale: true, icon: "ice_breath" },
-    { name: "Kinetic Pulse", id: "ability:kinetic_pulse", type: "item_only", icon: "kinetic_pulse" },
-    { name: "Lightning Beam", id: "ability:lightning_beam_<color>", type: "item_only", color: true, icon: "lightning_beam" },
-    { name: "Lightning Strike", id: "ability:lightning_strike", type: "item_only", icon: "lightning_strike" },
-    { name: "Phase", id: "ability:phase", type: "item_only", icon: "phase" },
-    { name: "Photo Healing", id: "ability:photo_healing", type: "tag_only" },
-    { name: "Power Blast", id: "ability:power_blast", type: "item_tag", scale: true, color: true, icon: "power_blast" },
-    { name: "Prism Shot", id: "ability:prism_shot", type: "item_tag", scale: true, color: true, icon: "prism_shot" },
-    { name: "Rocket Slam", id: "ability:rocket_slam", type: "item_tag", scale: true, icon: "rocket_slam" },
-    { name: "Super Speed", id: "ability:super_speed", type: "item_tag", scale: true, color: true, icon: "super_speed" },
-    { name: "Super Strength", id: "ability:super_strength", type: "tag_only", scale: true },
-    { name: "Telekinesis", id: "ability:telekinesis", type: "item_only", icon: "telekinesis" },
-    { name: "Thunderclap", id: "ability:thunderclap", type: "item_tag", scale: true, icon: "thunderclap" },
-    { name: "Undying", id: "ability:undying", type: "tag_only" },
-    { name: "Mask Off", id: "animation.suit.mask_off", type: "item_only", icon: "mask_off" },
-    { name: "Hood Down", id: "animation.suit.hood_down", type: "item_only", icon: "hood_down" },
-    { name: "Suit Off", id: "animation.suit.suit_off", type: "item_only", icon: "suit_off" },
-    { name: "Nano Toggle", id: "ability:toggle_anim_suit", type: "item_only", icon: "toggle_anim_suit" }
+    // --- COMPOUND GROUP CARDS (Combines multiple single-items into selection matrices) ---
+    {
+        name: "Energy Beams",
+        icon: "energy_beam",
+        colors: true,
+        multi: true, // Allows users to check multiple options inside this single card
+        options: [
+            { label: "Standard Beam", itemId: "ability:energy_beam_<color>" },
+            { label: "Chest Beam", itemId: "ability:chest_energy_beam_<color>" },
+            { label: "Double Beam", itemId: "ability:double_energy_beam_<color>" },
+            { label: "Head Beam", itemId: "ability:head_energy_beam_<color>" }
+        ]
+    },
+    {
+        name: "Suit Adjustments",
+        icon: "cosmetics",
+        multi: true, // Allows users to check multiple options inside this single card
+        options: [
+            { label: "Mask Off", itemId: "animation.suit.mask_off" },
+            { label: "Hood Down", itemId: "animation.suit.hood_down" },
+            { label: "Suit Off", itemId: "animation.suit.suit_off" },
+            { label: "Nano Toggle", itemId: "ability:toggle_anim_suit" }
+        ]
+    },
+
+    // --- STANDARD COMPACT CARDS (Explicitly tracks exact output targets without type keywords) ---
+    { name: "Area Teleport", icon: "portal", items: ["ability:area_teleport"], tags: ["ability:area_teleport"], colors: true },
+    { name: "Energy Bomb", icon: "energy_bomb", items: ["ability:energy_bomb"], tags: ["ability:energy_bomb"], scale: true, colors: true },
+    { name: "Extra Life", icon: "extra_life", tags: ["ability:extra_life"], scale: true },
+    { name: "Fire Breath", icon: "fire_breath", items: ["ability:fire_breath"], tags: ["ability:fire_breath"], scale: true },
+    { name: "Flight", icon: "flight", items: ["ability:flight"], tags: ["ability:flight"], scale: true },
+    { name: "Forcefield", icon: "forcefield", items: ["ability:forcefield_<color>"], colors: true },
+    { name: "Frostbite Wave", icon: "frostbite_wave", items: ["ability:frostbite_wave"] },
+    { name: "Gravity Flip", icon: "gravity_flip", items: ["ability:gravity_flip"] },
+    { name: "Ground Smash", icon: "ground_smash", items: ["ability:ground_smash"], tags: ["ability:ground_smash"], scale: true },
+    { name: "Healing Aura", icon: "healing_aura", items: ["ability:healing_aura"] },
+    { name: "Heat Vision", icon: "heat_vision", items: ["ability:heat_vision"], tags: ["ability:heat_vision"], scale: true, colors: true },
+    { name: "Ice Breath", icon: "ice_breath", items: ["ability:ice_breath"], tags: ["ability:ice_breath"], scale: true },
+    { name: "Kinetic Pulse", icon: "kinetic_pulse", items: ["ability:kinetic_pulse"] },
+    { name: "Lightning Beam", icon: "lightning_beam", items: ["ability:lightning_beam_<color>"], colors: true },
+    { name: "Lightning Strike", icon: "lightning_strike", items: ["ability:lightning_strike"] },
+    { name: "Phase", icon: "phase", items: ["ability:phase"] },
+    { name: "Photo Healing", icon: "photo_healing", tags: ["ability:photo_healing"] },
+    { name: "Power Blast", icon: "power_blast", items: ["ability:power_blast"], tags: ["ability:power_blast"], scale: true, colors: true },
+    { name: "Prism Shot", icon: "prism_shot", items: ["ability:prism_shot"], tags: ["ability:prism_shot"], scale: true, colors: true },
+    { name: "Rocket Slam", icon: "rocket_slam", items: ["ability:rocket_slam"], tags: ["ability:rocket_slam"], scale: true },
+    { name: "Super Speed", icon: "super_speed", items: ["ability:super_speed"], tags: ["ability:super_speed"], scale: true, colors: true },
+    { name: "Super Strength", icon: "super_strength", tags: ["ability:super_strength"], scale: true },
+    { name: "Telekinesis", icon: "telekinesis", items: ["ability:telekinesis"] },
+    { name: "Thunderclap", icon: "thunderclap", items: ["ability:thunderclap"], tags: ["ability:thunderclap"], scale: true },
+    { name: "Undying", icon: "undying", tags: ["ability:undying"] }
 ];
