@@ -386,12 +386,12 @@ const DATA = {
 };
 
 const REGISTRY_ABILITIES = [
-    // --- COMPOUND GROUP CARDS (Combines multiple single-items into selection matrices) ---
+    // --- COMPOUND GROUP CARDS ---
     {
         name: "Energy Beams",
         icon: "energy_beam",
         colors: true,
-        multi: true, 
+        multi: true,
         options: [
             { label: "Standard Beam", itemId: "ability:energy_beam_<color>", tags: [] },
             { label: "Chest Beam", itemId: "ability:chest_energy_beam_<color>", tags: [] },
@@ -400,30 +400,83 @@ const REGISTRY_ABILITIES = [
         ]
     },
 
-    // --- STANDARD COMPACT CARDS (Explicitly tracks exact output targets without type keywords) ---
-    { name: "Area Teleport", icon: "portal", items: ["ability:area_teleport"], tags: ["ability:area_teleport"], colors: true },
-    { name: "Energy Bomb", icon: "energy_bomb", items: ["ability:energy_bomb"], tags: ["ability:energy_bomb"], scale: true, colors: true },
-    { name: "Extra Life", icon: "extra_life", tags: ["ability:extra_life"], scale: true },
+    // --- ACTIVE ABILITIES ---
+    { name: "Area Teleport", icon: "portal", items: ["ability:area_teleport"], tags: ["ability:area_teleport_<color>", "ability:area_teleport_lightning"], colors: true },
+    { name: "Energy Bomb", icon: "energy_bomb", items: ["ability:energy_bomb"], tags: ["ability:energy_bomb", "ability:energy_bomb_<color>"], scale: true, colors: true },
     { name: "Fire Breath", icon: "fire_breath", items: ["ability:fire_breath"], tags: ["ability:fire_breath"], scale: true },
     { name: "Flight", icon: "flight", items: ["ability:flight"], tags: ["ability:flight"], scale: true },
+    { name: "Flight When Suit On", icon: "flight", items: ["ability:flight"], tags: ["ability:flight_when_suit_on"], scale: true },
     { name: "Forcefield", icon: "forcefield", items: ["ability:forcefield_<color>"], colors: true },
     { name: "Frostbite Wave", icon: "frostbite_wave", items: ["ability:frostbite_wave"] },
     { name: "Gravity Flip", icon: "gravity_flip", items: ["ability:gravity_flip"] },
     { name: "Ground Smash", icon: "ground_smash", items: ["ability:ground_smash"], tags: ["ability:ground_smash"], scale: true },
     { name: "Healing Aura", icon: "healing_aura", items: ["ability:healing_aura"] },
-    { name: "Heat Vision", icon: "heat_vision", items: ["ability:heat_vision"], tags: ["ability:heat_vision"], scale: true, colors: true },
+    { name: "Heat Vision", icon: "heat_vision", items: ["ability:heat_vision_<color>"], tags: ["ability:heat_vision"], scale: true, colors: true },
     { name: "Ice Breath", icon: "ice_breath", items: ["ability:ice_breath"], tags: ["ability:ice_breath"], scale: true },
     { name: "Kinetic Pulse", icon: "kinetic_pulse", items: ["ability:kinetic_pulse"] },
-    { name: "Lightning Beam", icon: "lightning_beam", items: ["ability:lightning_beam_<color>"], colors: true },
+    { name: "Lightning Beam", icon: "lightning_beam", items: ["ability:lightning_beam_<color>"], tags: ["ability:lightning_beam"], scale: true, colors: true },
     { name: "Lightning Strike", icon: "lightning_strike", items: ["ability:lightning_strike"] },
+    { name: "Mind Tricks", icon: "mind_tricks", items: ["ability:mind_tricks"] },
     { name: "Phase", icon: "phase", items: ["ability:phase"] },
-    { name: "Photo Healing", icon: "photo_healing", tags: ["ability:photo_healing"] },
-    { name: "Power Blast", icon: "power_blast", items: ["ability:power_blast"], tags: ["ability:power_blast"], scale: true, colors: true },
-    { name: "Prism Shot", icon: "prism_shot", items: ["ability:prism_shot"], tags: ["ability:prism_shot"], scale: true, colors: true },
+    { name: "Portal", icon: "portal", items: ["ability:portal_<color>"], colors: true },
+    { name: "Power Blast", icon: "power_blast", items: ["ability:power_blast"], tags: ["ability:power_blast", "ability:power_blast_<color>"], scale: true, colors: true },
+    { name: "Prism Shot", icon: "prism_shot", items: ["ability:prism_shot"], tags: ["ability:prism_shot", "ability:prism_shot_<color>"], scale: true, colors: true },
     { name: "Rocket Slam", icon: "rocket_slam", items: ["ability:rocket_slam"], tags: ["ability:rocket_slam"], scale: true },
-    { name: "Super Speed", icon: "super_speed", items: ["ability:super_speed"], tags: ["ability:super_speed"], scale: true, colors: true },
+    { name: "Size Manipulation", icon: "size_manipulation", items: ["ability:size_manipulation"] },
+    { name: "Sound Blast", icon: "sound_blast", items: ["ability:sound_blast"] },
+    { name: "Super Breath", icon: "super_breath", items: ["ability:fire_breath", "ability:ice_breath"] },
+    { name: "Super Punch", icon: "super_punch", items: ["ability:super_punch"], tags: ["ability:super_punch"], scale: true },
+    { name: "Super Speed", icon: "super_speed", items: ["ability:super_speed"], tags: ["ability:super_speed", "ability:super_speed_<color>"], scale: true, colors: true },
     { name: "Super Strength", icon: "super_strength", tags: ["ability:super_strength"], scale: true },
     { name: "Telekinesis", icon: "telekinesis", items: ["ability:telekinesis"] },
+    { name: "Tentacles Defense", icon: "tentacles", items: ["ability:tentacles_defense"], tags: ["ability:tentacles_<color>"], colors: true },
+    { name: "Tentacles Offense", icon: "tentacles", items: ["ability:tentacles_offense"], tags: ["ability:tentacles_<color>"], colors: true },
     { name: "Thunderclap", icon: "thunderclap", items: ["ability:thunderclap"], tags: ["ability:thunderclap"], scale: true },
-    { name: "Undying", icon: "undying", tags: ["ability:undying"] }
+    { name: "Web Shooter", icon: "web_shooter", items: ["weapon:web_shooter", "weapon:natural_web_shooter"] },
+    { name: "Web Spin", icon: "web_spin", items: ["ability:web_spin"] },
+    { name: "Web Swing", icon: "web_swing", items: ["ability:web_swing"] },
+
+    // --- PASSIVE / TAG ABILITIES ---
+    { name: "Blocking", icon: "forcefield", tags: ["ability:blocking"], scale: true },
+    { name: "Damage Reduction", icon: "dmg_reduction", tags: ["dmg_reduction:percent"], scale: true },
+    { name: "Extra Life", icon: "extra_life", tags: ["ability:extra_life"], scale: true },
+    { name: "Gliding", icon: "flight", tags: ["ability:gliding"] },
+    { name: "Gliding When Suit On", icon: "flight", tags: ["ability:gliding_when_suit_on"] },
+    { name: "Passive Dodge", icon: "passive_dodge", tags: ["ability:passive_dodge"], scale: true },
+    { name: "Photo Healing", icon: "photo_healing", tags: ["ability:photo_healing"] },
+    { name: "Undying", icon: "undying", tags: ["ability:undying"] },
+    { name: "Vampire", icon: "vampire", tags: ["ability:vampire"] },
+    { name: "Echolocation", icon: "xray", tags: ["ability:echolocation_red"] },
+
+    // --- IMMUNITIES ---
+    { name: "Immune: Fire", icon: "immunity", tags: ["immune:fire"] },
+    { name: "Immune: Lava", icon: "immunity", tags: ["immune:lava"] },
+    { name: "Immune: Fall", icon: "immunity", tags: ["immune:fall"] },
+    { name: "Immune: Explosion", icon: "immunity", tags: ["immune:explosion"] },
+    { name: "Immune: Lightning", icon: "immunity", tags: ["immune:lightning"] },
+    { name: "Immune: Drowning", icon: "immunity", tags: ["immune:drowning"] },
+    { name: "Immune: Suffocation", icon: "immunity", tags: ["immune:suffocation"] },
+    { name: "Immune: Magic", icon: "immunity", tags: ["immune:magic"] },
+    { name: "Immune: Void", icon: "immunity", tags: ["immune:void"] },
+    { name: "Immune: Poison", icon: "immunity", tags: ["immune:poison"] },
+    { name: "Immune: Wither", icon: "immunity", tags: ["immune:wither"] },
+    { name: "Immune: Nausea", icon: "immunity", tags: ["immune:nausea"] },
+    { name: "Immune: Blindness", icon: "immunity", tags: ["immune:blindness"] },
+    { name: "Immune: Hunger", icon: "immunity", tags: ["immune:hunger"] },
+    { name: "Immune: Weakness", icon: "immunity", tags: ["immune:weakness"] },
+    { name: "Immune: Fatigue", icon: "immunity", tags: ["immune:fatigue"] },
+    { name: "Immune: Slowness", icon: "immunity", tags: ["immune:slowness"] },
+    { name: "Immune: Levitation", icon: "immunity", tags: ["immune:levitation"] },
+    { name: "Immune: Telekinesis", icon: "immunity", tags: ["immune:telekinesis"] },
+
+    // --- VISUAL / EFFECT TAGS ---
+    { name: "Black Webs", icon: "web_shooter", tags: ["web:black"] },
+    { name: "White To Black Webs", icon: "web_shooter", tags: ["web:white_to_black"] },
+    { name: "Black To White Webs", icon: "web_shooter", tags: ["web:black_to_white"] },
+    { name: "Natural Webs", icon: "web_shooter", tags: ["web:natural"] },
+    { name: "Increased Web Regen", icon: "web_shooter", tags: ["web:increased"] },
+    { name: "Major Web Regen", icon: "web_shooter", tags: ["web:major"] },
+    { name: "Metal Skeleton Hit Sound", icon: "hit_sounds", tags: ["sound:metal_skeleton"] },
+    { name: "Vampire Hiss Hit Sound", icon: "hit_sounds", tags: ["sound:vampire_hiss"] },
+    { name: "Sound Weakness", icon: "sound_blast", tags: ["weakness:sound"] }
 ];
